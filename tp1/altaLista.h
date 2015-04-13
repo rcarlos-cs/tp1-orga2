@@ -1,25 +1,26 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>  /* malloc, free, rand */
 
 
 /** Tipos altaLista, nodo y estudiante **/
 
 	typedef struct lista_t {
-		struct nodo_t	*primero;
-		struct nodo_t	*ultimo;
-	} __attribute__((__packed__)) altaLista;
+		struct nodo_t	*primero;    			// size = 8  => offset = 0
+		struct nodo_t	*ultimo;	 			// size = 8  =>offset = 8
+	} __attribute__((__packed__)) altaLista; // size_struct = 16 => offset = 16
 
 	typedef struct nodo_t {
-		struct nodo_t	*siguiente;
-		struct nodo_t	*anterior;
-		void			*dato;
-	} __attribute__((__packed__)) nodo;
+		struct nodo_t	*siguiente;			// size = 8 => offset = 0
+		struct nodo_t	*anterior;			// size = 8 => offset = 8
+		void			*dato;				// size = 8 => offset = 16
+	} __attribute__((__packed__)) nodo;	// size_struct = 24 => offset = 24
 
 	typedef struct estudiante_t {
-		char			*nombre;
-		char			*grupo;
-		unsigned int	edad; 
-	} __attribute__((__packed__)) estudiante;        
+		char			*nombre;				// size = 8 => offset = 0
+		char			*grupo;					// size = 8 => offset = 8
+		unsigned int	edad; 					// size =  4 => offset = 16
+	} __attribute__((__packed__)) estudiante;   // size_struct = 20 => offset = 20
 
 
 /** Definiciones de punteros a funciones **/

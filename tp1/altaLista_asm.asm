@@ -1,6 +1,6 @@
 
 ; ESTUDIANTE
-	global estudianteCrear
+	;global estudianteCrear
 	global estudianteBorrar
 	global menorEstudiante
 	global estudianteConFormato
@@ -21,25 +21,28 @@
 ; YA IMPLEMENTADAS EN C
 	extern string_iguales
 	extern insertarAtras
+; Funciones de c 
+	extern free
+	extern malloc
 
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 	0
-	%define TRUE 	0
+	%define TRUE 	1
 	%define FALSE 	0
 
-	%define ALTALISTA_SIZE     		0
+	%define ALTALISTA_SIZE     		16
 	%define OFFSET_PRIMERO 			0
-	%define OFFSET_ULTIMO  			0
+	%define OFFSET_ULTIMO  			8
 
-	%define NODO_SIZE     			0
+	%define NODO_SIZE     			24
 	%define OFFSET_SIGUIENTE   		0
-	%define OFFSET_ANTERIOR   		0
-	%define OFFSET_DATO 			0
+	%define OFFSET_ANTERIOR   		8
+	%define OFFSET_DATO 			16
 
-	%define ESTUDIANTE_SIZE  		0
+	%define ESTUDIANTE_SIZE  		20
 	%define OFFSET_NOMBRE 			0
-	%define OFFSET_GRUPO  			0
-	%define OFFSET_EDAD 			0
+	%define OFFSET_GRUPO  			8
+	%define OFFSET_EDAD 			16
 
 
 section .rodata
@@ -56,7 +59,11 @@ section .text
 	; estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad );
 	estudianteCrear:
 		; COMPLETAR AQUI EL CODIGO
-
+		; rdi := *nombre
+		; rsi := *grupo
+		; edx := edad
+		
+		
 	; void estudianteBorrar( estudiante *e );
 	estudianteBorrar:
 		; COMPLETAR AQUI EL CODIGO
@@ -79,8 +86,24 @@ section .text
 
 	; nodo *nodoCrear( void *dato )
 	nodoCrear:
-		; COMPLETAR AQUI EL CODIGO
-
+	; COMPLETAR AQUI EL CODIGO
+		push rbp 
+		mov rbp, rsp
+		push rbx 
+		push r12
+		; los registros r13,r14,r15 no los utilizo
+		
+		mov rbx, rdi		; Me guardo la direccion  que apunta al dato
+		mov rdi, NODO_SIZE ; Paso en tamanio del nodo, para utilizarla en la funcion malloc
+		call malloc
+		mov qword[rax + OFFSET_SIGUIENTE], 0	 ; cargo el puntero a siguiente en NULL
+		mov	qword[rax + OFFSET_ANTERIOR], 0		; cargo el puntero a anterioR en NULL
+		mov qword[rax + OFFSET_DATO],rbx 			; Cargo la direccion del dato
+		
+		pop r12
+		pop rbx
+		pop rbp
+		ret
 	; void nodoBorrar( nodo *n, tipoFuncionBorrarDato f )
 	nodoBorrar:
 		; COMPLETAR AQUI EL CODIGO
