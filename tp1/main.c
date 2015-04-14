@@ -1,8 +1,17 @@
 #include "altaLista.h"
 #include <stdio.h>
+#include <stdlib.h>
+
+// FUNCIONES TESTS PROPIOS
+
 void tests_string_longitud();
 void tests_string_copiar();
 void tests_string_menor();
+void tests_estudianteCrear();
+void tests_estudianteBorrar();
+// FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
+
+//extern unsigned char string_longitud( char *s );
 
 int main (void){
 	// COMPLETAR AQUI EL CODIGO
@@ -20,9 +29,8 @@ int main (void){
 	tests_string_longitud();
 	tests_string_copiar();
 	tests_string_menor();
-	//char copia = string_copiar(c1);
-	//printf(" string 1 : %s, string 2: %s", c1, copia);
- 
+	tests_estudianteCrear(); 
+	tests_estudianteBorrar();
 	return 0;
 }
 
@@ -86,6 +94,8 @@ void tests_string_copiar(){
 		printf("tests_copia_de_string ----> %s \n", "error tests");
 	}
 	
+	// libero esta memoria dinamica solicitada en este tests
+	free(copy1); free(copy2); free(copy3); free(copy4); free(copy5); free(copy6); free(copy7); free(copy8);
 }
 
 void tests_string_menor(){
@@ -110,9 +120,33 @@ void tests_string_menor(){
 		printf("tests_string_menor ----> %s \n", "ok");
 	}else{
 		printf("tests_string_menor ----> %s \n", "error tests");
-	}
-	
+	}	
 }
 
+void tests_estudianteCrear(){
+	char *fede = "fede";
+	char *medio = "medio";
+	unsigned int ed = 19;
+	estudiante *e = estudianteCrear( fede, medio,ed);
+	bool res = true;
+	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
+	
+	res = res && string_iguales(fede,e->nombre) && string_iguales(medio, e->grupo) && ed == e->edad;
+	if (res){
+		printf("tests_estudiante_crear ----> %s \n", "ok");
+	}else{
+		printf("tests_estudiante_crear ----> %s \n", "error tests");
+	}
+	//BORRO AL ESTUDIANTE DE LA MEMORIA DINAMICA UTILIZADA EN ESTE TEST
+	estudianteBorrar(e);	
+}
 
-
+void tests_estudianteBorrar(){
+	char *fede = "fede";
+	char *medio = "medio";
+	unsigned int ed = 19;
+	estudiante *e = estudianteCrear( fede, medio,ed);
+	estudianteBorrar(e);
+	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
+	// OBSERVACION: segun valgrin toda la memoria dinamica fue desalojada
+}

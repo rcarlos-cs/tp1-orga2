@@ -36,20 +36,22 @@ void insertarAtras( altaLista *l, void *dato ){
 /*Funciones implementadas en c, a modo de psuedocodigo*/
 
 // Funciones auxiliares
-
+/*
 unsigned char string_longitud( char *s ){
-	/* Funcion que retorna la cantidad de caracteres de el string s*/
+	 //  Funcion que retorna la cantidad de caracteres de el string s*
 	int i = 0;
 	while(s[i] != 0){ // mientras no sea fin del string
 		i = i+1;
 	}
 	return i;
 }
+*/
 
+/*
 char *string_copiar( char *s ){
-	int n = string_longitud(s);
+	unsigned char n = string_longitud(s);
 	char *copia = (char *)malloc(n * sizeof(char));
-	int i = 0;
+	unsigned int i = 0;
 	while(s[i] != 0){
 		copia[i] = s[i];
 		i = i+1;
@@ -58,10 +60,11 @@ char *string_copiar( char *s ){
 	//printf("%d \n", copia[i-1]);
 	return copia;
 }
-
+*/
+/*
 bool string_menor( char *s1, char *s2 ){
 	
-	int i = 0;
+	unsigned int i = 0;
 	while( s1[i] == s2[i] ){
 		if( s1[i] == 0 || s2[i] == 0 )
 		break;
@@ -76,24 +79,30 @@ bool string_menor( char *s1, char *s2 ){
 	}	
 }
 
-
+*/
 
 
 // Funciones de alumno
 
 estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad ){
-	//int sizeName = string_longitud(nombre);
-	//int groupSize = string_longitud(grupo);
-	//char *nameCopy = (char*) malloc( sizeName * sizeof(char));
+	estudiante *newEstudent = (estudiante*) malloc(sizeof(estudiante)); // pido memoria para el struct estudiante
+	
+	//printf("struct estrudiante\t%d bytes \n", (int) sizeof(estudiante));
+	
 	char *nameCopy = string_copiar(nombre);
-	//char *groupCopy = (char*) malloc( groupSize * sizeof(char));
-	char *groupCopy = string_copiar(grupo); 
-	estudiante *newEstudent = (estudiante*) malloc(sizeof(estudiante));
 	newEstudent->nombre = nameCopy;
+	char *groupCopy = string_copiar(grupo); 
 	newEstudent->grupo = groupCopy;
 	newEstudent->edad = edad;
 	return newEstudent;
 }
+/*
+void estudianteBorrar( estudiante *e ){
+	free(e->nombre);
+	free(e->grupo);
+	free(e);
+}
+*/
 
 // Funciones de lista
 
