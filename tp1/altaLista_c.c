@@ -119,7 +119,7 @@ bool menorEstudiante( estudiante *e1, estudiante *e2 ){
 */
 /*
 void estudianteConFormato( estudiante *e, tipoFuncionModificarString f ){
-
+	
 }
 */
 
@@ -139,5 +139,20 @@ nodo *nodoCrear( void *dato ){
 void nodoBorrar( nodo *n, tipoFuncionBorrarDato f ){
 	f(n->dato);
 	free(n);
+}
+*/
+/*
+altaLista *altaListaCrear( void ){
+	altaLista* newList = (altaLista*) malloc(sizeof(altaLista));
+	newList->primero = NULL;
+	newList->ultimo = NULL;
+	return newList;
+}
+*/
+/*
+void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f ){
+	f(l->primero);
+	f(l->ultimo);
+	free(l);
 }
 */

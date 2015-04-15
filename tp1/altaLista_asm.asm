@@ -3,7 +3,7 @@
 	global estudianteCrear
 	global estudianteBorrar
 	global menorEstudiante
-	global estudianteConFormato
+	;global estudianteConFormato
 	global estudianteImprimir
 	
 ; ALTALISTA y NODO
@@ -362,12 +362,42 @@ section .text
 		
 	; altaLista *altaListaCrear( void )
 	altaListaCrear:
-		; COMPLETAR AQUI EL CODIGO
-
+		push rbp	; stack frame 
+		mov rbp, rsp
+		
+		xor rdi, rdi
+		mov rdi, ALTALISTA_SIZE ; 
+		call malloc ; Pido memoria para guardad mi instancia struct lista, en rax tengo la dirrecion de inicio de memoria
+		mov qword[rax + OFFSET_PRIMERO], NULL
+		mov qword[rax + OFFSET_ULTIMO], NULL
+		
+		pop rbp
+		ret
 	; void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f )
 	altaListaBorrar:
 		; COMPLETAR AQUI EL CODIGO
-
+		; rdi := l 
+		; rsi := f 
+		push rbp
+		push rbx
+		push r12
+		 
+		mov rbp, rsp
+		mov rbx, rdi ; backup de l en rbx   
+		mov r12, rsi ; backup de f en rr12
+		mov rdi, qword[rbx + OFFSET_PRIMERO]
+		call r12
+		mov rdi, qword[rbx + OFFSET_ULTIMO]
+		call r12
+		mov rdi, rbx
+		call free
+		
+		pop r12
+		pop rbx
+		pop rbp
+		ret 
+		
+		
 	; void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f )
 	altaListaImprimir:
 		; COMPLETAR AQUI EL CODIGO

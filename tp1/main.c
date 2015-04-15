@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <ctype.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>
+
 // FUNCIONES TESTS PROPIOS
 void tests_string_iguales();
 void tests_string_longitud();
@@ -11,9 +16,11 @@ void tests_string_menor();
 void tests_estudianteCrear();
 void tests_estudianteBorrar();
 void tests_memorEstudiante();
+void tests_funcion_estudianteConFormato();
 // TESTS LISTA DOBLEMENTE ENLAZADA
 void tests_funcion_nodo_crear();
 void tests_funcion_nodoBorrar();
+void tests_funcion_altaListaCrearYBorrar();	
 // FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
 
 //extern unsigned char string_longitud( char *s );
@@ -39,11 +46,13 @@ int main (void){
 	tests_estudianteCrear(); // No pierde memoria 
 	tests_estudianteBorrar();
 	tests_memorEstudiante();
+	//tests_funcion_estudianteConFormato();
 // TESTS DE LISTA DOBLEMENTE ENLAZADA
 	tests_funcion_nodo_crear();
 	tests_funcion_nodoBorrar();
 	
-	
+	tests_funcion_altaListaCrearYBorrar();
+
 
 	return 0;
 }
@@ -266,7 +275,14 @@ void tests_memorEstudiante(){
 	estudianteBorrar(e3);
 	estudianteBorrar(e4);
 }
-
+/*
+void tests_funcion_estudianteConFormato(){
+	void f( char* s ){}
+    estudianteConFormato( miEstudiante, f );
+    void g( char *s ){ if( s[0] != 0 ) s[0] = ’X’; }
+	estudianteConFormato( miEstudiante, g );
+}
+*/
 // TESTS DE LISTA DOBLEMENTE ENLAZADA
 void tests_funcion_nodo_crear(){
 	bool res = true;
@@ -310,5 +326,15 @@ void tests_funcion_nodoBorrar(){
 		printf("tests_funcion_nodoBorrar ----> %s \n", "ok");
 	}else{
 		printf("tests_funcion_nodoCrear----> %s \n", "error tests");
+	}
+}
+void tests_funcion_altaListaCrearYBorrar(){
+	bool res = true;
+	altaLista *newList = altaListaCrear();
+	altaListaBorrar(newList, (tipoFuncionBorrarDato)free);
+	if (res){
+		printf("tests_funcion_altaListaCrearYBorrar ----> %s \n", "ok");
+	}else{
+		printf("tests_funcion_altaListaCrearYBorrar ----> %s \n", "error tests");
 	}
 }
