@@ -61,7 +61,7 @@ char *string_copiar( char *s ){
 	return copia;
 }
 */
-/*
+
 bool string_menor( char *s1, char *s2 ){
 	
 	unsigned int i = 0;
@@ -79,11 +79,11 @@ bool string_menor( char *s1, char *s2 ){
 	}	
 }
 
-*/
 
 
 // Funciones de alumno
 
+/*
 estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad ){
 	estudiante *newEstudent = (estudiante*) malloc(sizeof(estudiante)); // pido memoria para el struct estudiante
 	
@@ -96,6 +96,8 @@ estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad ){
 	newEstudent->edad = edad;
 	return newEstudent;
 }
+*/
+
 /*
 void estudianteBorrar( estudiante *e ){
 	free(e->nombre);

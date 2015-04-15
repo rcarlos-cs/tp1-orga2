@@ -132,20 +132,21 @@ void tests_estudianteCrear(){
 	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
 	
 	res = res && string_iguales(fede,e->nombre) && string_iguales(medio, e->grupo) && ed == e->edad;
+
 	if (res){
 		printf("tests_estudiante_crear ----> %s \n", "ok");
 	}else{
 		printf("tests_estudiante_crear ----> %s \n", "error tests");
 	}
 	//BORRO AL ESTUDIANTE DE LA MEMORIA DINAMICA UTILIZADA EN ESTE TEST
-	estudianteBorrar(e);	
+	//estudianteBorrar(e);
 }
 
 void tests_estudianteBorrar(){
 	char *fede = "fede";
 	char *medio = "medio";
 	unsigned int ed = 19;
-	estudiante *e = estudianteCrear( fede, medio,ed);
+	estudiante *e = estudianteCrear(fede, medio,ed);
 	estudianteBorrar(e);
 	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
 	// OBSERVACION: segun valgrin toda la memoria dinamica fue desalojada
