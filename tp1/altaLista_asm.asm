@@ -70,7 +70,7 @@ section .text
 		
 		xor rbx, rbx ; incrementador inicializado en 0
 		xor r12, r12 ; 
-		mov r12, rdi ; base del string
+		mov r12, rdi ; guardo la dirreccion al string s
 	.ciclo:
 		cmp byte[r12 + rbx * 1], 0 ; Si el contenido de la posicion es cero 
 		je .fin
@@ -97,19 +97,22 @@ section .text
 		
 		xor rbx, rbx ; inicalizo rbx tod en cero
 		xor r14, r14
-		mov rbx, rdi ; me guardo la dirrecion puntero s en rbx
+		mov rbx, rdi ; me guardo la dirrecion puntero s en rbx		
 		call string_longitud ; llamo a la funcion auxiliar y devuelve un unsigned char 1 byte, para guardar la longitud
 		;mov r12, rax;
-		and rax , 0x00000000000000ff ; filtro solo la parte byte menos significativo
+;		and rax , 0x00000000000000ff ; filtro solo la parte byte menos significativo
+		xor rdi, rdi
 		mov rdi, rax
+		inc rdi		; pido un byte mas pra guardar el 0 (fin de string)
 		call malloc ; malloc con tamanio rdi
 		mov r12, rax ; guardo la dirrecion a donde va ser guardado el nuevo string copia
 		xor r13, r13 ; inicalizo la variable indice r13 = 0;
 	.copiar:
 		cmp byte[rbx + r13 * 1], 0 ; me fijo si es el final del char
-		je .fin				   ; si es cero fin 
+						   ; si es cero fin 
 		mov r14b, byte[rbx + r13 * 1] ; solo muevo el byte al registro r14l
 		mov byte[r12 + r13 * 1], r14b ; copie el el char en mi string copia 
+		je .fin
 		inc r13					;
 		jmp .copiar
 	.fin:
@@ -122,66 +125,75 @@ section .text
 		ret
 		
 	; bool string_menor( char *s1, char *s2 )	
-;	string_menor:
+	string_menor:
 		; rdi := s1
 		; rsi := s2
-;		push rbp
-;		mov rbp, rsp
-;		push rbx
-;		push r12
-;		push r13
-;		push r14
-;		push r15
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		push r13
+		push r14
+		push r15
 		
-;		xor rax, rax
-;		xor rbx, rbx ; inicializo mi indice en CERO
-;		mov r12, rdi ; guado en r12 la dirrecion a inicio del string s1 
-;		mov r13, rsi ; guado en r13 la dirrecion a inicio del string s1
-;		xor r14, r14 ;
-;	.ciclo:
-;		mov r14b, byte[r12+ rbx * 1] ; guardo el valor s1[i] en r14b
-;		cmp r14b, byte[r13 + rbx * 1] ; comparo s1[i] == s2[]
+		sub rsp, 8 ; alineo la pila
+		
+		xor rax, rax
+		xor rbx, rbx ; inicializo mi indice en CERO
+		mov r12, rdi ; guado en r12 la dirrecion a inicio del string s1 
+		mov r13, rsi ; guado en r13 la dirrecion a inicio del string s1
+		xor r14, r14 ;
+		call string_iguales ; si s1[i] == [s2] listo  s1 no es menor a s2 salto a .fin
+		cmp rax , 1 ;
+		mov rax, 0;  
+		je .fin   ; 
+	.ciclo:
+		mov r14b, byte[r12+ rbx * 1] ; guardo el valor s1[i] en r14b
+		cmp r14b, byte[r13 + rbx * 1] ; comparo s1[i] == s2[i] si sin distintos termino ciclo
 		
 		
-;		jne .finCiclo
-;		inc rbx
-;		jmp .ciclo
-;	.finCiclo:	
-;		xor r15, r15
-;		mov r15b, byte[r13 + rbx * 1] ; guardo el valor s2[i] en r15b
+		jne .finCiclo
+		inc rbx
+		jmp .ciclo
+	.finCiclo:	
+		xor r15, r15
+		mov r15b, byte[r13 + rbx * 1] ; guardo el valor s2[i] en r15b
 		
 		; caso s1[i] == 0 && s2[i] == 0
-;		cmp r14b, 0  ; veo si s1[i] == 0
-;		jne .saltar
-;		cmp r15b, 0
-;		jne .saltar 
-;		mov rax, 0 ; devuelvo false
-;		jne .fin  ; jmp .fin
+		cmp r14b, 0  ; veo si s1[i] == 0
+		jne .saltar
+		cmp r15b, 0
+		jne .saltar 
+		mov rax, 0 ; devuelvo false
+		jne .fin  ; jmp .fin
 		 
-;	.saltar:
+	.saltar:
 		
-;		mov rax, 0	; devuelvo false 
-;		je .fin  
+		mov rax, 0	; devuelvo false 
+		je .fin  
 		
 		; caso si s1[i] == 0 || s2[i] == 0
-;		cmp r14b, 0	; si s1[i] == 0 
-;		mov rax, 1 ; devuelvo true pues r14b < r15b (s1[i] < s2[i])	
-;		je .fin
-;		; caso si s1[i] == 0 && s2[i] != 0
-;		cmp r14b, r15b  ; veo si s1[i] == s2[i]  y s1[i] !=0  && s2[i] != 0
-;		mov rax, 1	; devuelvo false 
-;		jl .fin 
-;		mov rax, 0 ; sino devuelvo false
-;		jne .fin
+		cmp r14b, 0	; si s1[i] == 0 
+		mov rax, 1 ; devuelvo true pues r14b < r15b (s1[i] < s2[i])	
+		je .fin
+		; caso si s1[i] == 0 && s2[i] != 0
+		cmp r14b, r15b  ; veo si s1[i] == s2[i]  y s1[i] !=0  && s2[i] != 0
+		mov rax, 1	; devuelvo false 
+		jl .fin 
+		mov rax, 0 ; sino devuelvo false
+		jne .fin
 				
-;	.fin:
-;		pop r15
-;		pop r14
-;		pop r13
-;		pop r12
-;		pop rbx
-;		pop rbp
-;		ret
+	.fin:
+		
+		add rsp, 8
+		
+		pop r15
+		pop r14
+		pop r13
+		pop r12
+		pop rbx
+		pop rbp
+		ret
 	; estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad );
 	estudianteCrear:
 		; COMPLETAR AQUI EL CODIGO
@@ -208,16 +220,14 @@ section .text
 		xor rdi, rdi 
 		mov rdi, rbx
 		call string_copiar ; Llamo a la funcion para copiar ; char *string_copiar( char *s )
-		mov qword[r12 + OFFSET_NOMBRE], rax ; guarde la cipia de *nombre
+		mov qword[r12 + OFFSET_NOMBRE], rax ; guarde la copia de *nombre
 		
 		xor rdi, rdi 
 		mov rdi, r13
 		call string_copiar ;  char *string_copiar( char *s )
 		mov qword[r12 + OFFSET_GRUPO], rax ; guardo la copia de *grupo
 		      
-		mov dword[r12 + OFFSET_EDAD], r14d ; guarde el edad   
-		call string_copiar ; char *string_copiar( char *s )
-		
+		mov dword[r12 + OFFSET_EDAD], r14d ; guarde el edad en la struct estudiante		
 		mov rax, r12 ; retorno la posicion de momeria del struct
 
 		pop r14
@@ -255,7 +265,47 @@ section .text
 	; bool menorEstudiante( estudiante *e1, estudiante *e2 ){
 	menorEstudiante:
 		; COMPLETAR AQUI EL CODIGO
-
+		; rdi := e1
+		; rsi := e2
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		
+		mov rbx, rdi; rbx := e1 back de dirreciones
+		mov r12, rsi; rbx := e2 back de dirreciones
+		mov rdi, qword[rbx + OFFSET_NOMBRE] ; obtengo la dirrecion del nombre del estudiante e1
+		mov rsi, qword[r12 + OFFSET_NOMBRE] ; obtengo la dirrecion del nombre del estudiante e2
+		call string_iguales 				; llamo a lafuncion  string_iguales(e1->nombre, e2->nombre);
+		cmp rax, TRUE
+		je .desempate						; call me midifica los flags
+		; sino 
+		call string_menor ; 		no son string_iguales(e1->nombre, e2->nombre)
+		jmp .fin		; pues en rax ya viene la respuesta	
+		
+	.desempate:
+		; si e1->nombre == e2->nombre desempato e1->edad <= e2->edad
+		xor rdi, rdi
+		mov edi, dword[rbx + OFFSET_EDAD]
+		mov esi, dword[r12 + OFFSET_EDAD]
+		cmp edi, esi ; comparo e1->edad <= e2->edad
+		jle .respuestaTrue
+		jmp .respuestaFalse
+	.respuestaTrue:
+			xor rax, rax 
+			mov rax, TRUE
+			jmp .fin
+	.respuestaFalse:
+			xor rax, rax
+			mov rax, FALSE
+			jmp .fin
+			
+	.fin:
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+				
 	; void estudianteConFormato( estudiante *e, tipoFuncionModificarString f )
 	estudianteConFormato:
 		; COMPLETAR AQUI EL CODIGO
@@ -291,7 +341,25 @@ section .text
 	; void nodoBorrar( nodo *n, tipoFuncionBorrarDato f )
 	nodoBorrar:
 		; COMPLETAR AQUI EL CODIGO
-
+		; rdi = n
+		; rsi = f
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		
+		mov rbx, rdi ; guardo rbx := n dirrecion donde esta guardado el nodo
+		mov r12, rsi ; guardo r12 := f
+		mov rdi, qword[rbx + OFFSET_DATO] ; RDI := n->dato
+		call r12; llamo a la tipoFuncionBorrarDato f que esta guardado a partir de la dirrecion indicada por r12
+		mov rdi, rbx  
+		call free ; borro la el struct nodo
+		
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+		
 	; altaLista *altaListaCrear( void )
 	altaListaCrear:
 		; COMPLETAR AQUI EL CODIGO

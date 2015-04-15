@@ -49,19 +49,23 @@ unsigned char string_longitud( char *s ){
 
 /*
 char *string_copiar( char *s ){
-	unsigned char n = string_longitud(s);
+	// los string se representan 
+	//['c','a','r','l','o','s',''] ==[99,97,114,108,111,115,0]
+	
+	unsigned char n = string_longitud(s) + 1;
 	char *copia = (char *)malloc(n * sizeof(char));
 	unsigned int i = 0;
 	while(s[i] != 0){
 		copia[i] = s[i];
 		i = i+1;
 	}
-	//copia[i] = s[i]; // pongo en caracter de fin de linea caracter, aunque segun mis tes esta implicito
+	copia[i] = s[i]; // pongo en caracter de fin de linea caracter, aunque segun mis tes esta implicito
 	//printf("%d \n", copia[i-1]);
 	return copia;
 }
 */
 
+/*
 bool string_menor( char *s1, char *s2 ){
 	
 	unsigned int i = 0;
@@ -78,8 +82,7 @@ bool string_menor( char *s1, char *s2 ){
 		return s1[i] < s2[i];
 	}	
 }
-
-
+*/
 
 // Funciones de alumno
 
@@ -97,7 +100,6 @@ estudiante *estudianteCrear( char *nombre, char *grupo, unsigned int edad ){
 	return newEstudent;
 }
 */
-
 /*
 void estudianteBorrar( estudiante *e ){
 	free(e->nombre);
@@ -105,18 +107,37 @@ void estudianteBorrar( estudiante *e ){
 	free(e);
 }
 */
+/*
+bool menorEstudiante( estudiante *e1, estudiante *e2 ){
+	if ( string_iguales(e1->nombre,e2->nombre) ){ // si e1->nombre == e2->nombre
+		// si e1->edad =< e2->edad
+		return e1->edad <= e2->edad;
+	}else{
+			return string_menor(e1->nombre,e2->nombre);
+	}
+}
+*/
+/*
+void estudianteConFormato( estudiante *e, tipoFuncionModificarString f ){
+
+}
+*/
 
 // Funciones de lista
 
+
 /*
 nodo *nodoCrear( void *dato ){
-	nodo *nuevo =(int*)malloc ( sizeof(nodo) );; //sizeof(nodo) == 24
+	nodo *nuevo =(nodo*)malloc ( sizeof(nodo) );; //sizeof(nodo) == 24
 	nuevo->siguiente = NULL;
 	nuevo->anterior = NULL;
 	nuevo->dato = dato;
 	return nuevo;
 }
 */
-//void nodoBorrar( nodo *n, tipoFuncionBorrarDato f ){
-	
-//}
+/*
+void nodoBorrar( nodo *n, tipoFuncionBorrarDato f ){
+	f(n->dato);
+	free(n);
+}
+*/

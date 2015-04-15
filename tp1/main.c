@@ -3,12 +3,17 @@
 #include <stdlib.h>
 
 // FUNCIONES TESTS PROPIOS
-
+void tests_string_iguales();
 void tests_string_longitud();
 void tests_string_copiar();
 void tests_string_menor();
+// TESTS ESTUDIANTES
 void tests_estudianteCrear();
 void tests_estudianteBorrar();
+void tests_memorEstudiante();
+// TESTS LISTA DOBLEMENTE ENLAZADA
+void tests_funcion_nodo_crear();
+void tests_funcion_nodoBorrar();
 // FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
 
 //extern unsigned char string_longitud( char *s );
@@ -26,12 +31,62 @@ int main (void){
 	printf("\n siguiente: %p, anterior: %p, dato: %d \n", nuevo1->siguiente, nuevo1->anterior, (nuevo1->dato));	
 */
 // TESTS DE FUNCIONES AUXILIARES
-	tests_string_longitud();
-	tests_string_copiar();
-	tests_string_menor();
-	tests_estudianteCrear(); 
+	tests_string_longitud(); // No pierde memoria
+	tests_string_copiar();  // No pierde memoria
+	tests_string_iguales();
+	tests_string_menor();	// No pierde memoria
+// TESTS DE ESTUDIANTE
+	tests_estudianteCrear(); // No pierde memoria 
 	tests_estudianteBorrar();
+	tests_memorEstudiante();
+// TESTS DE LISTA DOBLEMENTE ENLAZADA
+	tests_funcion_nodo_crear();
+	tests_funcion_nodoBorrar();
+	
+	
+
 	return 0;
+}
+
+// TESTS DE FUNCIONES AUXILIARES
+void	tests_string_iguales(){
+	bool res  = true;
+	char* c1 = "";
+	char* copy1 = "";
+	char* c2 = "c";
+	char* copy2 = "c";
+	char* c3 = "ca";
+	char* copy3 = "ca";
+	char* c4 = "car";
+	char* copy4 = "car";
+	
+	// uso esto para verificar si mi funcion string_copiar es correcta
+	char* copia1 = string_copiar(c1);
+	char* copia2 = string_copiar(c2);
+	char* copia3 = string_copiar(c3);
+	char* copia4 = string_copiar(c4);
+	
+	res = res && string_iguales(c1,copy1);
+	res = res && string_iguales(c2,copy2);
+	res = res && string_iguales(c3,copy3);
+	res = res && string_iguales(c4,copy4);
+	
+	
+	res = res && string_iguales(c1,copia1);
+	res = res && string_iguales(c2,copia2);
+	res = res && string_iguales(c3,copia3);
+	res = res && string_iguales(c4,copia4);
+	
+	
+	if (res){
+		printf("tests_string:iguales ----> %s \n", "ok");
+	}else{
+		printf("tests_string_iguales ----> %s \n", "error tests");
+	}
+	free(copia1);
+	free(copia2);
+	free(copia3);
+	free(copia4);
 }
 
 void tests_string_longitud(){
@@ -52,6 +107,7 @@ void tests_string_longitud(){
 	res = res && string_longitud(c6) == 5;
 	res = res && string_longitud(c7) == 6;
 	res = res && string_longitud(c8) == 9;
+	
 	if (res){
 		printf("tests_longitud_de_string ----> %s \n", "ok");
 	}else{
@@ -78,7 +134,7 @@ void tests_string_copiar(){
 	char *copy7 = string_copiar(c7);
 	char *copy8 = string_copiar(c8);
 
-	res = res && *copy1 == *c1 && copy1 !=c1;
+	//res = res && *copy1 == *c1 && copy1 !=c1;
 	res = res && *copy2 == *c2 && copy2 !=c2;
 	res = res && *copy3 == *c3 && copy3 !=c3;
 	res = res && *copy4 == *c4 && copy4 !=c4;
@@ -95,7 +151,14 @@ void tests_string_copiar(){
 	}
 	
 	// libero esta memoria dinamica solicitada en este tests
-	free(copy1); free(copy2); free(copy3); free(copy4); free(copy5); free(copy6); free(copy7); free(copy8);
+	free(copy1); 
+	free(copy2); 
+	free(copy3); 
+	free(copy4); 
+	free(copy5); 
+	free(copy6); 
+	free(copy7); 
+	free(copy8);
 }
 
 void tests_string_menor(){
@@ -109,6 +172,8 @@ void tests_string_menor(){
 	char *c8 = "casa";
 	char *c9 = "hola";
 	char *c10 = "hola";
+	char *c11 = "holamundo";
+	char *c12 = "";
 	bool res = true;
 	res = res && string_menor(c1,c2); // (merced < mercurio) == true
 	res = res && string_menor(c3,c4); // (perro < zorro) == true
@@ -116,13 +181,16 @@ void tests_string_menor(){
 	res = res && string_menor(c7,c8); // (caZa < casa) == true
 	res = res && !string_menor(c9,c10); // !(hola < hola) == true
 	res = res && !string_menor(c6,c5); // !(seniora < senior) == true
+	res = res && !string_menor(c11,c10); // !(holamundo < hola) == true
+	res = res && !string_menor(c12,c12); // !("" < "") == true
+	
 	if (res){
 		printf("tests_string_menor ----> %s \n", "ok");
 	}else{
 		printf("tests_string_menor ----> %s \n", "error tests");
 	}	
 }
-
+// TESTS DE ESTUDIANTE
 void tests_estudianteCrear(){
 	char *fede = "fede";
 	char *medio = "medio";
@@ -132,6 +200,7 @@ void tests_estudianteCrear(){
 	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
 	
 	res = res && string_iguales(fede,e->nombre) && string_iguales(medio, e->grupo) && ed == e->edad;
+	estudianteBorrar(e);
 
 	if (res){
 		printf("tests_estudiante_crear ----> %s \n", "ok");
@@ -139,7 +208,6 @@ void tests_estudianteCrear(){
 		printf("tests_estudiante_crear ----> %s \n", "error tests");
 	}
 	//BORRO AL ESTUDIANTE DE LA MEMORIA DINAMICA UTILIZADA EN ESTE TEST
-	//estudianteBorrar(e);
 }
 
 void tests_estudianteBorrar(){
@@ -148,6 +216,99 @@ void tests_estudianteBorrar(){
 	unsigned int ed = 19;
 	estudiante *e = estudianteCrear(fede, medio,ed);
 	estudianteBorrar(e);
+	if (true){
+		printf("tests_borrar_estudiante ----> %s \n", "ok");
+	}else{
+		printf("tests_borrar_estudiante ----> %s \n", "error tests");
+	}
 	//printf("Nombre %s, grupo %s, edad%d \n", e->nombre, e->grupo, e->edad);
 	// OBSERVACION: segun valgrin toda la memoria dinamica fue desalojada
+}
+
+void tests_memorEstudiante(){
+	bool res = true;
+	// Caso estudiantes distinto nombre
+	char *fede = "fede";
+	char *medio = "medio";
+	unsigned int ed1 = 19;
+	estudiante *e1 = estudianteCrear(fede, medio,ed1);
+
+	char *miguel = "miguel";
+	char *lomito = "lomito";
+	unsigned int ed2 = 19;
+	estudiante *e2 = estudianteCrear(miguel, lomito,ed2);
+	
+	// Caso estudiantes con igual nombre
+	
+	char *walter1 = "walter";
+	char *bofe1 = "bofe";
+	unsigned int ed3 = 22;
+	estudiante *e3 = estudianteCrear(walter1, bofe1,ed3);
+	
+	char *walter2 = "walter";
+	char *bofe2 = "bofe";
+	unsigned int ed4 = 20;
+	estudiante *e4 = estudianteCrear(walter2, bofe2,ed4);
+	
+	res = res && menorEstudiante(e1,e2); // distinto nombre
+	res = res && !menorEstudiante(e2,e1);
+	res = res && !menorEstudiante(e3,e4); // igual nombre, desempate por edad
+	res = res && menorEstudiante(e4,e3);  
+	
+	
+	if (res){
+		printf("tests_funcion_menorEstudiante ----> %s \n", "ok");
+	}else{
+		printf("tests_funcion_menorEstudiante ----> %s \n", "error tests");
+	}
+	estudianteBorrar(e1);
+	estudianteBorrar(e2);
+	estudianteBorrar(e3);
+	estudianteBorrar(e4);
+}
+
+// TESTS DE LISTA DOBLEMENTE ENLAZADA
+void tests_funcion_nodo_crear(){
+	bool res = true;
+	// Estudiante 1
+	estudiante *e1 = estudianteCrear("nahuel", "salchicha", 23);
+	nodo *n1 = nodoCrear(e1);
+	estudiante *student1 = n1->dato;
+	// Estudiante 2
+	estudiante* e2 = estudianteCrear("ximena", "cuadril", 24);
+	nodo *n2 = nodoCrear(e2);
+	estudiante *student2 = n2->dato;  
+	// Estudiante 3
+	estudiante* e3 = estudianteCrear("faby", "asado", 18);
+	nodo *n3 = nodoCrear(e3);
+	estudiante *student3 = n3->dato;  
+	// estudiante 4
+		estudiante* e4 = estudianteCrear("emilia", "bifeDeChirizo", 18);
+	nodo *n4 = nodoCrear(e4);
+	estudiante *student4 = n4->dato;  
+
+	res = res && string_iguales(student1->nombre, e1->nombre) && string_iguales(student1->grupo, e1->grupo) && student1->edad == e1->edad;
+	res = res && string_iguales(student2->nombre, e2->nombre) && string_iguales(student2->grupo, e2->grupo) && student2->edad == e2->edad;
+	res = res && string_iguales(student3->nombre, e3->nombre) && string_iguales(student3->grupo, e3->grupo) && student3->edad == e3->edad;
+	res = res && string_iguales(student4->nombre, e4->nombre) && string_iguales(student4->grupo, e4->grupo) && student4->edad == e4->edad;
+	if (res){
+		printf("tests_funcion_nodoCrear ----> %s \n", "ok");
+	}else{
+		printf("tests_funcion_nodoCrear----> %s \n", "error tests");
+	}
+	nodoBorrar(n1, (tipoFuncionBorrarDato)estudianteBorrar );
+	nodoBorrar(n2, (tipoFuncionBorrarDato)estudianteBorrar );
+	nodoBorrar(n3, (tipoFuncionBorrarDato)estudianteBorrar );
+	nodoBorrar(n4, (tipoFuncionBorrarDato)estudianteBorrar );
+}
+void tests_funcion_nodoBorrar(){
+	bool res = true;
+	estudiante *miEstudiante1 = estudianteCrear("nahuel", "salchicha", 23);
+	nodo *miNodo1 = nodoCrear(miEstudiante1); // creo mi nodo com miEstudiante
+	nodoBorrar( miNodo1, (tipoFuncionBorrarDato)estudianteBorrar );
+	if (res){
+		printf("tests_funcion_nodoBorrar ----> %s \n", "ok");
+	}else{
+		printf("tests_funcion_nodoCrear----> %s \n", "error tests");
+	}
 }
