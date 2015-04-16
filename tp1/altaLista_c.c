@@ -119,7 +119,27 @@ bool menorEstudiante( estudiante *e1, estudiante *e2 ){
 */
 /*
 void estudianteConFormato( estudiante *e, tipoFuncionModificarString f ){
+	f(e->nombre);
+	f(e->grupo);
+}
+*/
+
+/*
+void estudianteImprimir( estudiante *e, FILE *file ){
+	//(...)
+	//Paula [LF]
+	//	[HT]asado [LF]
+	//	[HT] 21 [LF]
 	
+		//FILE *file;
+		//file = fopen(f, "w");
+		//
+		//if (file==NULL) {fputs ("File error",stderr); exit (1);}
+		
+		fprintf(file, "%s\n",e->nombre);
+		fprintf(file, "\t%s\n",e->grupo);
+		fprintf(file, "\t%d\n",e->edad);
+		fclose(file);	
 }
 */
 
@@ -151,8 +171,26 @@ altaLista *altaListaCrear( void ){
 */
 /*
 void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f ){
-	f(l->primero);
-	f(l->ultimo);
+	nodo *actual = l->primero;
+	nodo *borrar= NULL;
+	l->primero = NULL;
+	l->ultimo = NULL;
+	if ( actual != NULL ){  // si l no es una lista vacia, por ejemplo: primero ----> [5 <-> 7 <-> 8 <-> 9] <---- ultimo
+
+		//nodo *proximo  = l->primero->siguiente;
+		while( actual != NULL ){
+			borrar = actual;
+			actual  = actual->siguiente;
+			nodoBorrar(borrar,f);
+		}
+	}
 	free(l);
 }
+*/
+
+/*
+void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f ){
+	
+}
+
 */

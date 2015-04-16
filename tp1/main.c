@@ -2,11 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <ctype.h>
-#include <string.h>
-#include <assert.h>
-#include <math.h>
-
 // FUNCIONES TESTS PROPIOS
 void tests_string_iguales();
 void tests_string_longitud();
@@ -17,10 +12,24 @@ void tests_estudianteCrear();
 void tests_estudianteBorrar();
 void tests_memorEstudiante();
 void tests_funcion_estudianteConFormato();
+
+/* funciones para probar estudiante con formato*/
+    void f( char* s ){
+		s = s;
+	}
+    void g( char *s ){ 
+		char x = 'X';
+		if( s[0] != 0 ) s[0] = x; 
+	}
+
+/* fin de funciones para probar estudiante con formato*/
+
+void tests_funcion_estudianteImprimir();
 // TESTS LISTA DOBLEMENTE ENLAZADA
 void tests_funcion_nodo_crear();
 void tests_funcion_nodoBorrar();
 void tests_funcion_altaListaCrearYBorrar();	
+void tests_crear_una_lista_y_agregarle_un_elemento();
 // FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
 
 //extern unsigned char string_longitud( char *s );
@@ -46,13 +55,14 @@ int main (void){
 	tests_estudianteCrear(); // No pierde memoria 
 	tests_estudianteBorrar();
 	tests_memorEstudiante();
-	//tests_funcion_estudianteConFormato();
+	tests_funcion_estudianteImprimir();
+	tests_funcion_estudianteConFormato();
 // TESTS DE LISTA DOBLEMENTE ENLAZADA
 	tests_funcion_nodo_crear();
 	tests_funcion_nodoBorrar();
 	
 	tests_funcion_altaListaCrearYBorrar();
-
+	tests_crear_una_lista_y_agregarle_un_elemento();
 
 	return 0;
 }
@@ -275,14 +285,43 @@ void tests_memorEstudiante(){
 	estudianteBorrar(e3);
 	estudianteBorrar(e4);
 }
-/*
-void tests_funcion_estudianteConFormato(){
-	void f( char* s ){}
-    estudianteConFormato( miEstudiante, f );
-    void g( char *s ){ if( s[0] != 0 ) s[0] = ’X’; }
-	estudianteConFormato( miEstudiante, g );
+
+void tests_funcion_estudianteImprimir(){
+	estudiante *miEstudiante = estudianteCrear("Walter","Bofe",20);
+	FILE *file ;
+	file = fopen("estudianteImprimirTestsCarlos.txt","w");
+	estudianteImprimir(miEstudiante, file);
+	fclose(file);
+	estudianteBorrar(miEstudiante);
+	
+	printf("tests_funcion_estudianteImprimir ----> %s \n", "ok");
 }
-*/
+
+
+void tests_funcion_estudianteConFormato(){
+	estudiante* miEstudiante = estudianteCrear("david", "salchicha", 34);
+
+	//void f( char* s ){}
+	
+	
+    //printf("tests_funcion_estudianteConFormato_antes ----> %s \n", miEstudiante->nombre);
+    //printf("tests_funcion_estudianteConFormato_antes ----> %s \n", miEstudiante->grupo);
+    
+    estudianteConFormato( miEstudiante, f );
+    //printf("tests_funcion_estudianteConFormato_despues ----> %s \n", miEstudiante->nombre);
+    //printf("tests_funcion_estudianteConFormato_despues ----> %s \n", miEstudiante->grupo);
+    
+    //void g( char *s ){ if( s[0] != 0 ) s[0] = ’X’; }
+	
+	estudianteConFormato( miEstudiante, g );
+	
+	printf("tests_funcion_estudianteConFormato_despues ----> %s \n", miEstudiante->nombre);
+    printf("tests_funcion_estudianteConFormato_despues ----> %s \n", miEstudiante->grupo);
+	
+	estudianteBorrar(miEstudiante);
+
+}
+
 // TESTS DE LISTA DOBLEMENTE ENLAZADA
 void tests_funcion_nodo_crear(){
 	bool res = true;
@@ -337,4 +376,24 @@ void tests_funcion_altaListaCrearYBorrar(){
 	}else{
 		printf("tests_funcion_altaListaCrearYBorrar ----> %s \n", "error tests");
 	}
+}
+
+void tests_crear_una_lista_y_agregarle_un_elemento(){
+	
+	altaLista *miAltaLista = altaListaCrear();
+	// iserto de manera ordenada los estudiantes
+	
+	insertarAtras( miAltaLista, estudianteCrear( "eduardo", "chinchulin", 46 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "juan", "salchicha", 45 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "juanita", "bife", 78 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "leila", "entrania", 26 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "marcela", "rueda", 45 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "mariana", "vacio", 1 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "mario", "asado", 23 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "miguel", "entrania", 2 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "tomas", "molleja", 14 ) );
+
+	altaListaImprimir( miAltaLista, "salida.txt", (tipoFuncionImprimirDato)estudianteImprimir );
+	printf("tests_crear_una_lista_y_agregarle_un_elemento ----> %s \n", "ok");	
+	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 }

@@ -3,7 +3,7 @@
 	global estudianteCrear
 	global estudianteBorrar
 	global menorEstudiante
-	;global estudianteConFormato
+	global estudianteConFormato
 	global estudianteImprimir
 	
 ; ALTALISTA y NODO
@@ -29,6 +29,9 @@
 ; Funciones de c 
 	extern free
 	extern malloc
+	extern fprintf
+	extern fclose
+	extern fopen
 
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 	0
@@ -48,10 +51,20 @@
 	%define OFFSET_NOMBRE 			0
 	%define OFFSET_GRUPO  			8
 	%define OFFSET_EDAD 			16
-
+	
+; /** CONSTANTES AUXILIARES PARA IMPRIMIR **/
+	;%define FINLINEA_CHAR				db"%s\n"
+	;%define TABULACION_FINLINEA_CHAR	db"\t%c\n"
+	;%define TABULACION_FINLINEA_INT		db"\t%i\n"
+	%define LF 						10 ; fin de linea "\n"
+	%define HT 						9  ; tabulacion "\t"
+	%define FINSTRING               0  ; ""
 
 section .rodata
 
+	finlinea_char: db'%s', LF, FINSTRING ; "%s\n"
+	tabulacion_finlinea_char : db HT,'%s',LF,FINSTRING ; "\t%c\n"
+	tabulacion_finlinea_int : db HT,'%d',LF,FINSTRING; "\t%d\n"
 
 section .data
 
@@ -308,13 +321,63 @@ section .text
 				
 	; void estudianteConFormato( estudiante *e, tipoFuncionModificarString f )
 	estudianteConFormato:
+		; prototipo de void f(char* s);
 		; COMPLETAR AQUI EL CODIGO
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		
+		mov rbx, rdi ; backup rbx := e 
+		mov r12, rsi ; backup r12 := f
+		mov rdi, qword[rbx + OFFSET_NOMBRE]
+		call r12				; f(e->nombre)
+		mov rdi, qword[rbx + OFFSET_GRUPO]
+		call r12				; f(e->grupo)
 	
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+		
 	; void estudianteImprimir( estudiante *e, FILE *file )
 	estudianteImprimir:
 		; COMPLETAR AQUI EL CODIGO
-
-
+		; rdi = e
+		; rsi = file
+		; prototipo de fprint : int fprintf(FILE *archivo, const char *formato, argumento, ...);
+		push rbp 
+		mov rbp, rsp
+		push rbx
+		push r12
+	
+		mov rbx, rdi ; backup rbx = e
+		mov r12, rsi ; backup r12 = file
+		xor rsi, rsi
+		mov rdi, r12 					; int fprintf(FILE *archivo, const char *formato, argumento, ...);
+		mov rsi, finlinea_char
+		mov rdx, qword[rbx + OFFSET_NOMBRE]
+		call fprintf						; ; fprintf(file, "%s\n",e->nombre);
+		xor rsi, rsi
+		mov rdi, r12
+		mov rsi, tabulacion_finlinea_char
+		mov rdx, qword[rbx + OFFSET_GRUPO];
+		call fprintf					; fprintf(file, "\t%s\n",e->grupo);	
+		mov rdi, r12
+		xor rsi,rsi
+		mov rsi, tabulacion_finlinea_int  ; fprintf(file, "\t%s\n",e->grupo);
+		xor rdx, rdx
+		mov edx, dword[rbx + OFFSET_EDAD];
+		call fprintf
+		;mov rdi, r12
+		;call fclose
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+		
+		
+		
 ;/** FUNCIONES DE ALTALISTA Y NODO **/    >> PUEDEN CREAR LAS FUNCIONES AUXILIARES QUE CREAN CONVENIENTES
 ;--------------------------------------------------------------------------------------------------------
 
@@ -375,22 +438,74 @@ section .text
 		ret
 	; void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f )
 	altaListaBorrar:
+;				nodo *actual = l->primero;
+;				nodo *borrar= NULL;
+;				l->primero = NULL;
+;				l->ultimo = NULL;
+;				if ( actual != NULL ){  // si l no es una lista vacia, por ejemplo: primero ----> [5 <-> 7 <-> 8 <-> 9] <---- ultimo
+;					while( actual != NULL ){
+;						borrar = actual;
+;						actual  = actual->siguiente;
+;						nodoBorrar(borrar,f);
+;					}
+;				}
+;				free(l);
+	
+	
+	
 		; COMPLETAR AQUI EL CODIGO
 		; rdi := l 
 		; rsi := f 
 		push rbp
+		mov rbp,rsp
 		push rbx
 		push r12
+		push r13
+		push r14
+		push r15
+		sub rsp, 8 ; alineo la pila 
 		 
 		mov rbp, rsp
-		mov rbx, rdi ; backup de l en rbx   
-		mov r12, rsi ; backup de f en rr12
-		mov rdi, qword[rbx + OFFSET_PRIMERO]
-		call r12
-		mov rdi, qword[rbx + OFFSET_ULTIMO]
-		call r12
-		mov rdi, rbx
-		call free
+		mov rbx, rdi ; backup rbx := l  puntero a lista
+		mov r12, rsi ; backup r12 := f  funocion borrar
+		mov r13, qword[rbx + OFFSET_PRIMERO]; me guardo actual:=l->primero
+		xor r14, r14
+		mov r14, NULL ; borrar := NULL  puntero a nodo a borrar
+		mov qword[rbx + OFFSET_PRIMERO], NULL ; l->primero := NULL
+		mov qword[rbx + OFFSET_ULTIMO], NULL  ; l->ultimo := NULL
+		; Si actual == NULL
+		cmp r13, NULL
+		je .fin  
+	.while:
+		cmp r13, NULL
+		je .fin
+		mov r14, r13; borrar := actual
+		mov r15, r13 ; copio r15 := actual
+		mov r13, [r15+OFFSET_SIGUIENTE] ; actual := actual->siguiente
+		mov rdi, r14 ; rdi := borrar
+		mov rsi, r12 ; rsi := f
+		call nodoBorrar ; nodoBorrar(borrar,f)
+		jmp .while
+	.fin:
+		mov rdi, rbx; 
+		call free; rdi := l
+		
+		add rsp, 8
+		pop r15
+		pop r14
+		pop r13
+		pop r12 
+		pop rbx
+		pop rbp
+		ret
+
+
+;		mov rdi, qword[rbx + OFFSET_PRIMERO]
+;		call r12
+;		mov rdi, qword[rbx + OFFSET_ULTIMO]
+;		call r12
+;		mov rdi, rbx
+;		call free
 		
 		pop r12
 		pop rbx
