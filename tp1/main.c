@@ -381,7 +381,11 @@ void tests_funcion_altaListaCrearYBorrar(){
 void tests_crear_una_lista_y_agregarle_un_elemento(){
 	
 	altaLista *miAltaLista = altaListaCrear();
+	altaLista *miAltaListaVacia = altaListaCrear();
+	altaLista *miAltaListaConUnElemento = altaListaCrear();
 	// iserto de manera ordenada los estudiantes
+	
+	insertarAtras( miAltaListaConUnElemento, estudianteCrear( "eduardo", "chinchulin", 46 ) );
 	
 	insertarAtras( miAltaLista, estudianteCrear( "eduardo", "chinchulin", 46 ) );
 	insertarAtras( miAltaLista, estudianteCrear( "juan", "salchicha", 45 ) );
@@ -392,8 +396,16 @@ void tests_crear_una_lista_y_agregarle_un_elemento(){
 	insertarAtras( miAltaLista, estudianteCrear( "mario", "asado", 23 ) );
 	insertarAtras( miAltaLista, estudianteCrear( "miguel", "entrania", 2 ) );
 	insertarAtras( miAltaLista, estudianteCrear( "tomas", "molleja", 14 ) );
-
-	altaListaImprimir( miAltaLista, "salida.txt", (tipoFuncionImprimirDato)estudianteImprimir );
+	
+	char *salidaTestListaNoVacia = "salidaTestListaNoVacia.txt";
+	char *salidaTestListaVacia = "salidaTestListaVacia.txt";
+	char *salidaTestListaConUnElemento = "salidaTestListaConUnElemento.txt";
+	
+	altaListaImprimir( miAltaLista, salidaTestListaNoVacia, (tipoFuncionImprimirDato)estudianteImprimir );
+	altaListaImprimir( miAltaListaVacia, salidaTestListaVacia, (tipoFuncionImprimirDato)estudianteImprimir );
+	altaListaImprimir( miAltaListaConUnElemento, salidaTestListaConUnElemento, (tipoFuncionImprimirDato)estudianteImprimir );
 	printf("tests_crear_una_lista_y_agregarle_un_elemento ----> %s \n", "ok");	
 	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	
+	//fclose(pFile);
 }

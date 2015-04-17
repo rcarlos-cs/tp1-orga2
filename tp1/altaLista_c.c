@@ -187,10 +187,22 @@ void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f ){
 	free(l);
 }
 */
-
 /*
+
 void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f ){
-	
+	FILE* pFile;
+	pFile = fopen(archivo, "w");
+	nodo* nodoActual = l->primero;
+	if (nodoActual != NULL){
+		while(nodoActual != NULL){
+			f(nodoActual->dato,pFile);//estudianteImprimir(nodoActual->dato);
+			nodoActual = nodoActual->siguiente;
+		}
+	}else{
+		//imprimir <vacia>
+		fprintf(pFile, "<vacia>\n");
+	}
+	fclose(pFile);
 }
 
 */

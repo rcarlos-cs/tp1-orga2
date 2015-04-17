@@ -1,12 +1,2 @@
->>>>>>>>>>>>>>>> PROBANDO ESTUDIANTE-CON-FORMATO
->>>>>>>>>>>>>>>> PROBANDO INSERTAR-ORDENADO
->>>>>>>>>>>>>>>> PROBANDO EDAD-MEDIA
-edadMedia: 0.00000
->>>>>>>>>>>>>>>> PROBANDO ESTUDIANTE-IMPRIMIR
-Pascual
-	Alto grupo
-	21
->>>>>>>>>>>>>>>> PROBANDO ALTALISTA-IMPRIMIR
->>>>>>>>>>>>>>>> PROBANDO ALTALISTA-FILTRAR
->>>>>>>>>>>>>>>> PROBANDO INVARIANTE DE ALTALISTA
+<vacia>
 >>>>>>>>>>>>>>>> PROBANDO BORRAR ESTUDIANTE Y ALTALISTA

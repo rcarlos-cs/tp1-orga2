@@ -1,4 +1,3 @@
->>>>>>>>>>>>>>>> PROBANDO MENOR-ESTUDIANTE
->>>>>>>>>>>>>>>> PROBANDO INSERTAR-ORDENADO
+<vacia>
 >>>>>>>>>>>>>>>> PROBANDO EDAD-MEDIA
 edadMedia: -nan

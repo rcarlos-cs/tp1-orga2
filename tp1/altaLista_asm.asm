@@ -65,7 +65,8 @@ section .rodata
 	finlinea_char: db'%s', LF, FINSTRING ; "%s\n"
 	tabulacion_finlinea_char : db HT,'%s',LF,FINSTRING ; "\t%c\n"
 	tabulacion_finlinea_int : db HT,'%d',LF,FINSTRING; "\t%d\n"
-
+	imprimirVacio: db '<vacio>',LF, FINSTRING ; "<vacio>\n" 
+	write: db 'w',FINSTRING 
 section .data
 
 
@@ -516,8 +517,63 @@ section .text
 	; void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f )
 	altaListaImprimir:
 		; COMPLETAR AQUI EL CODIGO
-
-
+			;FILE* pFile;
+			;pFile = fopen(archivo, "w");
+			;nodo* nodoActual = l->primero;
+			;if (nodoActual != NULL){
+			;	while(nodoActual != NULL){
+			;		f(nodoActual->dato,pFile);//estudianteImprimir(nodoActual->dato);
+			;		nodoActual = nodoActual->siguiente;
+			;	}
+			;}else{
+			;	//imprimir <vacia>
+			;	fprintf(pFile, "<vacia>\n");
+			;}
+			;fclose(pFile);
+			push rbp
+			mov rbp, rsp
+			push rbx 
+			push r12
+			push r13
+			push r14
+			push r15
+			sub rsp, 8 ; alineo la pila
+			; rdi := l
+			; rsi := archivo 
+			; rdx := f
+			mov rbx, rdi ; backup altaLista rbx := l
+			mov r12, rsi ; backup archivo r12 := archivo
+			mov r13, rsi ; backup tipoFuncionImprimir r13 := f
+			mov rdi, r12;
+			xor rsi, rsi
+			mov rsi, write; modo escritura "w"
+			call fopen ; prototipo de fopen: FILE *fopen(const char *filename, const char *mode)
+			mov r14, rax ; guardo la dirrecion del archivo a escribir, osea r14= pFile 
+			mov r15, qword[rbx + OFFSET_PRIMERO] ; r15 = nodoActual
+			cmp r15, NULL
+			je .imprimirVacio
+		.ciclo:
+			cmp r15, NULL ;   
+			je .fin
+			mov rdi, qword[r15 + OFFSET_DATO] ; rdi := nodoActual->dato
+			mov rsi, r14 ;  rsi := pFile
+			call r13 ; f(nodoActual->dato, pFile)
+			mov r15, [r15 + OFFSET_SIGUIENTE]
+		.imprimirVacio:
+			mov rdi, r14
+			mov rsi, imprimirVacio
+			call fprintf ; fprintf(pFile, "<vacio>" );
+		.fin	
+			add rsp, 8
+			pop r15
+			pop r14
+			pop r13
+			pop r12
+			pop rbx
+			pop rbp
+			ret
+			
+			
 ;/** FUNCIONES AVANZADAS **/    >> PUEDEN CREAR LAS FUNCIONES AUXILIARES QUE CREAN CONVENIENTES
 ;----------------------------------------------------------------------------------------------
 
