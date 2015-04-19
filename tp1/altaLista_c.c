@@ -187,7 +187,7 @@ void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f ){
 	free(l);
 }
 */
-/*
+
 
 void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f ){
 	FILE* pFile;
@@ -204,5 +204,38 @@ void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f )
 	}
 	fclose(pFile);
 }
-
+/*
+float edadMedia( altaLista *l ){
+	nodo* actual = l->primero;
+	//float res = 0;
+	unsigned int cantEstudiantes = 0;
+	unsigned int sumaEdades = 0;
+	estudiante *e = NULL;
+	if (actual != NULL){
+		while(actual != NULL){
+			cantEstudiantes++;
+			e = actual->dato;
+			sumaEdades = sumaEdades + e->edad;
+			actual = actual->siguiente;
+		}
+		//res = (float)sumaEdades/cantEstudiantes;
+		//return res;
+		return (float)sumaEdades/cantEstudiantes;
+	}
+	return 0;
+}
+*/
+/*
+void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f ){
+	nodo* actual = l->primero; 	
+	nodo* anterior = NULL;
+	if(actual != NULL){
+		while( !f(dato, actual->dato) && actual->siguiente != NULL ){
+			actual = actual->siguiente;
+			
+		}
+	}else{
+		
+	} 
+}
 */

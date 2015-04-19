@@ -30,6 +30,8 @@ void tests_funcion_nodo_crear();
 void tests_funcion_nodoBorrar();
 void tests_funcion_altaListaCrearYBorrar();	
 void tests_crear_una_lista_y_agregarle_un_elemento();
+void tests_funcion_edadMedia();
+void tests_funcion_insertarOrdenado();
 // FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
 
 //extern unsigned char string_longitud( char *s );
@@ -63,7 +65,8 @@ int main (void){
 	
 	tests_funcion_altaListaCrearYBorrar();
 	tests_crear_una_lista_y_agregarle_un_elemento();
-
+	tests_funcion_edadMedia();
+	tests_funcion_insertarOrdenado();
 	return 0;
 }
 
@@ -401,11 +404,52 @@ void tests_crear_una_lista_y_agregarle_un_elemento(){
 	char *salidaTestListaVacia = "salidaTestListaVacia.txt";
 	char *salidaTestListaConUnElemento = "salidaTestListaConUnElemento.txt";
 	
-	altaListaImprimir( miAltaLista, salidaTestListaNoVacia, (tipoFuncionImprimirDato)estudianteImprimir );
 	altaListaImprimir( miAltaListaVacia, salidaTestListaVacia, (tipoFuncionImprimirDato)estudianteImprimir );
+	altaListaImprimir( miAltaLista, salidaTestListaNoVacia, (tipoFuncionImprimirDato)estudianteImprimir );
 	altaListaImprimir( miAltaListaConUnElemento, salidaTestListaConUnElemento, (tipoFuncionImprimirDato)estudianteImprimir );
 	printf("tests_crear_una_lista_y_agregarle_un_elemento ----> %s \n", "ok");	
 	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	altaListaBorrar( miAltaListaVacia, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	altaListaBorrar( miAltaListaConUnElemento, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 	
 	//fclose(pFile);
+}
+void tests_funcion_edadMedia(){
+	bool res = true;
+	altaLista *miAltaLista = altaListaCrear();
+	altaLista *miAltaListaVacia = altaListaCrear();
+	altaLista *miAltaListaConUnElemento = altaListaCrear();
+	// iserto de manera ordenada los estudiantes
+	
+	insertarAtras( miAltaListaConUnElemento, estudianteCrear( "eduardo", "chinchulin", 5 ) );
+	
+	insertarAtras( miAltaLista, estudianteCrear( "eduardo", "chinchulin", 46 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "juan", "salchicha", 45 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "juanita", "bife", 78 ) );
+	insertarAtras( miAltaLista, estudianteCrear( "leila", "entrania", 27  ) );
+	insertarAtras( miAltaLista, estudianteCrear( "marcela", "rueda", 45 ) );
+	//insertarAtras( miAltaLista, estudianteCrear( "mariana", "vacio", 1 ) );
+	//insertarAtras( miAltaLista, estudianteCrear( "mario", "asado", 23 ) );
+	//insertarAtras( miAltaLista, estudianteCrear( "miguel", "entrania", 2 ) );
+	//insertarAtras( miAltaLista, estudianteCrear( "tomas", "molleja", 14 ) );
+	
+		
+	res = res && edadMedia(miAltaListaVacia) == 0;
+	res = res && edadMedia(miAltaListaConUnElemento) == 5;
+	res = res && edadMedia(miAltaLista) == 48.2f; // 241/5 == 48.2
+	//printf( "edadMedia = %2.5f\n", edadMedia(miAltaLista ) );
+	if (res) {
+		printf("tests_funcion_edadMedia ----> %s \n", "ok");	
+	}else{
+		printf("tests_funcion_edadMedia ----> %s \n", "error");	
+	}	
+	//printf( "edadMedia = %2.5f\n", edadMedia( miAltaLista ) );
+	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	altaListaBorrar( miAltaListaVacia, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	altaListaBorrar( miAltaListaConUnElemento, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+
+}
+
+void tests_funcion_insertarOrdenado(){
+
 }

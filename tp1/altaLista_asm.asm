@@ -11,12 +11,12 @@
 	global nodoBorrar
 	global altaListaCrear
 	global altaListaBorrar
-	global altaListaImprimir
+	;global altaListaImprimir
 
 ; AVANZADAS
 	global edadMedia
-	global insertarOrdenado
-	global filtrarAltaLista
+	;global insertarOrdenado
+	;global filtrarAltaLista
 	
 ; FUNCIONES AUXILIARES	
 	global string_longitud
@@ -69,6 +69,9 @@ section .rodata
 	write: db 'w',FINSTRING 
 section .data
 
+;Para declarar variables globales no inicializadas,Usamos la pseudo-instrucciones RESB, RESW, RESD, RESQ 
+section .bss
+pFile resq 1
 
 section .text
 
@@ -544,11 +547,11 @@ section .text
 			mov rbx, rdi ; backup altaLista rbx := l
 			mov r12, rsi ; backup archivo r12 := archivo
 			mov r13, rsi ; backup tipoFuncionImprimir r13 := f
-			mov rdi, r12;
-			xor rsi, rsi
+			mov rdi, r12; rdi := archivo 
+			xor rsi, rsi;
 			mov rsi, write; modo escritura "w"
 			call fopen ; prototipo de fopen: FILE *fopen(const char *filename, const char *mode)
-			mov r14, rax ; guardo la dirrecion del archivo a escribir, osea r14= pFile 
+			mov [rel pFile], rax ; guardo la dirrecion del archivo a escribir, osea r14= pFile 
 			mov r15, qword[rbx + OFFSET_PRIMERO] ; r15 = nodoActual
 			cmp r15, NULL
 			je .imprimirVacio
@@ -559,11 +562,12 @@ section .text
 			mov rsi, r14 ;  rsi := pFile
 			call r13 ; f(nodoActual->dato, pFile)
 			mov r15, [r15 + OFFSET_SIGUIENTE]
+			jmp .ciclo
 		.imprimirVacio:
 			mov rdi, r14
 			mov rsi, imprimirVacio
 			call fprintf ; fprintf(pFile, "<vacio>" );
-		.fin	
+		.fin:	
 			add rsp, 8
 			pop r15
 			pop r14
@@ -580,7 +584,65 @@ section .text
 	; float edadMedia( altaLista *l )
 	edadMedia:
 		; COMPLETAR AQUI EL CODIGO
-
+		;				nodo* actual = l->primero;
+		;				unsigned int cantEstudiantes = 0;
+		;				unsigned int sumaEdades = 0;
+		;				estudiante *e = NULL;
+		;				if (actual != NULL){
+		;					while(actual != NULL){
+		;						cantEstudiantes++;
+		;						e = actual->dato;
+		;						sumaEdades = sumaEdades + e->edad;
+		;						actual = actual->siguiente;
+		;					}
+		;					return (float)sumaEdades/cantEstudiantes;
+		;				}
+		;				return 0;
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		push r13
+		push r14
+		push r15
+		sub rsp, 8 ; alineo la pila
+		; rdi := l
+		mov rbx, [rdi + OFFSET_PRIMERO] ; actual := l->primero
+		xorpd xmm0, xmm0 ; inicilaizo, osea xmm0 := sumaEdades
+		xorpd xmm1, xmm1 ; inicilaizo, osea r13 := cantEstudiantes
+		xor r12, r12 ; sumaEdades = 0
+		xor r13, r13 ; cantEstudiantes = 0
+		cmp rbx, NULL ; si actual == NULL
+		je .fin
+	.while:       ; caso en que que la lista tiene por lo menos un alumno
+		cmp rbx, NULL ; si actual != NULL
+		je .calcularPromedio
+		inc r13;					cantEstudiantes++;	
+		mov r14, [rbx + OFFSET_DATO] ; e = actual->dato;
+		add r12d, dword[r14 + OFFSET_EDAD] ; sumaEdades = sumaEdades + e->edad;
+		mov r15, rbx
+		mov rbx, [r15+OFFSET_SIGUIENTE] ; actual = actual->siguiente;;
+		JMP .while		
+	.calcularPromedio:
+		movq xmm0, r12 ; xmm0 := sumaEdades
+		movq xmm1, r13 ; xmm1 := cantEstudiantes
+		;cvtdq2ps xmm0, ENTERO1; convierto a float el ENTERO1
+		;cvtdq2ps xmm1, ENTERO2; convierto al floar el ENTERO2
+		cvtdq2ps xmm0, xmm0
+		cvtdq2ps xmm1, xmm1
+		divps xmm0, xmm1	
+		jmp .fin
+	.fin:	
+		
+		add rsp, 8 ; desalineo la pila 
+		pop r15
+		pop r14
+		pop r13
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+		
 	; void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f )
 	insertarOrdenado:
 		; COMPLETAR AQUI EL CODIGO
