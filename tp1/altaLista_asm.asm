@@ -15,7 +15,7 @@
 
 ; AVANZADAS
 	global edadMedia
-	;global insertarOrdenado
+	global insertarOrdenado
 	;global filtrarAltaLista
 	
 ; FUNCIONES AUXILIARES	
@@ -230,7 +230,7 @@ section .text
 		xor r14, r14	
 		mov r14d, edx ; back up de edad
 		xor rdi, rdi
-		mov edi, ESTUDIANTE_SIZE ; pido memoria para guardar los datos del estudiante
+		mov rdi, ESTUDIANTE_SIZE ; pido memoria para guardar los datos del estudiante
 		call malloc ;
 		mov r12, rax ; Guardo la dirrecion a mi struct ESTUDIANTE
 		
@@ -617,7 +617,7 @@ section .text
 	.while:       ; caso en que que la lista tiene por lo menos un alumno
 		cmp rbx, NULL ; si actual != NULL
 		je .calcularPromedio
-		inc r13;					cantEstudiantes++;	
+		inc r13d;					cantEstudiantes++;	
 		mov r14, [rbx + OFFSET_DATO] ; e = actual->dato;
 		add r12d, dword[r14 + OFFSET_EDAD] ; sumaEdades = sumaEdades + e->edad;
 		mov r15, rbx
@@ -626,10 +626,8 @@ section .text
 	.calcularPromedio:
 		movq xmm0, r12 ; xmm0 := sumaEdades
 		movq xmm1, r13 ; xmm1 := cantEstudiantes
-		;cvtdq2ps xmm0, ENTERO1; convierto a float el ENTERO1
-		;cvtdq2ps xmm1, ENTERO2; convierto al floar el ENTERO2
-		cvtdq2ps xmm0, xmm0
-		cvtdq2ps xmm1, xmm1
+		cvtdq2ps xmm0, xmm0 ; convierto a float el ENTERO1
+		cvtdq2ps xmm1, xmm1 ; convierto al floar el ENTERO2
 		divps xmm0, xmm1	
 		jmp .fin
 	.fin:	
@@ -646,8 +644,180 @@ section .text
 	; void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f )
 	insertarOrdenado:
 		; COMPLETAR AQUI EL CODIGO
+								
+;						void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f ){
+;							nodo* actual = l->primero; 	
+;							nodo* antecesor = NULL;
+;							nodo* nuevoNodo = nodoCrear(dato);
+;							
+;							if (actual == NULL){
+;								// Caso en que la lista esta vacia, agrego como primero y ultimo
+;								listaVaciaInsertarNodo(l, nuevoNodo);
+;							}else if (f(dato,actual->dato)){
+;								// Caso en que actual es el primer nodo
+;								listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
+;							}else{
+;								//caso en el que agrego el nuevo nodo en el medio de la lista o en el ultimo nodo
+;								// busco donde debo poner el nodo;
+;								while (actual != NULL && !f(dato, actual->dato)){
+;									antecesor = actual;
+;									actual = actual->siguiente;
+;								}
+;								if ( actual == NULL){
+;								// caso agrego a lo ultimo de la lista
+;									//actual = l->ultimo;
+;									listaNoVaciaInsertaComoultimo( l, antecesor, nuevoNodo);
+;								}else{
+;									// caso  agrego en medio, osea que dato > actual->dato
+;									InsertaEnMedio(antecesor, nuevoNodo, actual);
+;								}	
+;							}	
+;						}
 
-	; void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp )
+		; rdi := l
+		; rsi := dato
+		; rdx := f
+		
+		%define FUNCION_COMPARAR [rbp - 8]
+		push rbp 
+		mov rbp, rsp
+		sub rsp, 8 ;
+		push rbx
+		push r12
+		push r13
+		push r14
+		push r15
+		
+		mov qword FUNCION_COMPARAR, rdi; FUNCION_COMPARAR =  [rbp - 8] := f  
+		;sub rsp, 8 ; alineo la pila
+		
+		mov rbx, rdi ;backup de rbx := l
+		mov r12, rsi ; backup de r12 := dato
+		mov FUNCION_COMPARAR, rdx ; backup de r13 := f
+		mov r14, qword[rbx + OFFSET_PRIMERO]; R14 := actual
+		mov rdi, r12; rdi := dato
+		call nodoCrear ; nodo *nodoCrear( void *dato );
+		; rax := nuevoNodo
+		mov r13, rax ; backup r13 := nuevoNodo  
+		cmp r14, NULL ; Si la lista es vacia actual != NULL
+		je .inserterUnicoNodo 
+		mov rdi, r12 ; rdi := dato
+		mov rsi, qword[r14 + OFFSET_DATO] ; rsi:= actual->dato 
+		call FUNCION_COMPARAR ; bool menorEstudiante(estudiante *e1, estudiante *e2)
+		cmp rax, 1; menorEstudiante(dato, actual->dato) == true
+		je .insertarComoPrimero
+	.while:
+		cmp r14, NULL ; 
+		jne .insertEnElMedio
+		mov rdi, r12 ; rdi := dato
+		mov rsi, qword[r14 + OFFSET_DATO] ;
+		call  r13  ; !f(dato, actual->dato))
+		cmp rax, 1 ;
+		je .insertComoUltimo
+		; Iterar en el while
+		mov r15, r14 ; r15 := actual , donde r15 es : antecesor := actual
+		mov r14, qword[r14 + OFFSET_SIGUIENTE]; actual = actual->siguiente;
+		JMP .while
+		
+	.insertComoUltimo:
+		mov rdi, rbx ; rdi := l
+		mov rsi, r15 ; rsi := antecesor
+		mov rdx, r13 ; rdx := nuevoNodo
+		call listaNoVaciaInsertaComoultimo; prototipo: void listaNoVaciaInsertaComoultimo(altaLista* l, nodo* ult, nodo* nuevo)
+		jmp .fin
+	.insertEnElMedio:
+		mov rdi, r15 ; rdi := antecesor
+		mov rsi, r13 ; rsi := nuevo
+		mov rdx, r14 ; rdx := posterior
+		call InsertaEnMedio ; prototipo; void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior)
+		jmp .fin
+	.insertarComoPrimero:
+		mov rdi, rbx	
+		mov rsi, r14	
+		mov rdx, r13
+		call  listaNoVaciaInsertaComoPrimero; void listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
+		jmp .fin
+	.inserterUnicoNodo:
+		mov rdi, rbx ; rdi := l
+		mov rsi, r12 ; rsi := nuevoNodo
+		call listaVaciaInsertarNodo ; void listaVaciaInsertarNodo(altaLista* l, nodo* nuevo) 
+		jmp .fin
+		.fin:
+		;add rsp, 8 ; desalineo la pila
+		pop r15
+		pop r14
+		pop r13
+		pop r12
+		pop rbx
+		add rsp, 8 ;
+		pop rbp
+		ret
+			; /****** AUXILIARES DE insertarOdenado ******/	
+		
+		;Void listaVaciaInsertarNodo(altaLista* l, nodo* nuevo)
+	listaVaciaInsertarNodo:
+				;l->primero = nuevo;
+				;l->ultimo = nuevo;
+		push rbp
+		mov rbp, rsp
+		; rdi := l
+		; rsi := nuevo
+		mov qword[rdi + OFFSET_PRIMERO], rsi ; l->primero = nuevo;
+		mov qword[rdi + OFFSET_ULTIMO], RSI; L->ultimo := nuevo
+		pop rbp
+		ret 
+		
+		;void listaNoVaciaInsertaComoPrimero(altaLista* l, nodo* prim, nodo* nuevo)	
+	listaNoVaciaInsertaComoPrimero:
+				; nuevo->siguiente = prim;
+				; prim->anterior = nuevo;
+				; l->primero = nuevo;
+		
+		push rbp
+		mov rbp, rsp
+		; rdi := L
+		; rsi := prim
+		; rdx := nuevo
+		mov qword[rdx + OFFSET_SIGUIENTE], rsi ; nuevo->siguiente = prim;
+		mov qword[rsi + OFFSET_ANTERIOR], rdx ; prim->anterior = nuevo; 
+		mov qword[rdi + OFFSET_PRIMERO], rdx ; l->primero = nuevo;
+		pop rbp
+		ret
+			; void listaNoVaciaInsertaComoultimo(altaLista* l, nodo* ult, nodo* nuevo)
+	listaNoVaciaInsertaComoultimo:
+				; ult->siguiente = nuevo;
+				; nuevo->anterior = ult;
+				; l->ultimo = nuevo;
+		push rbp
+		mov rbp, rsp
+		; rdi := l
+		; rsi := ult
+		; rdx := nuevo
+		mov qword[rsi + OFFSET_SIGUIENTE], rdx ; ult->siguiente = nuevo;
+		mov qword[rdx + OFFSET_ANTERIOR], rsi ; nuevo->anterior = ult;
+		mov qword[rdi + OFFSET_ULTIMO], rdx ; ; l->ultimo = nuevo;
+		pop rbp
+		ret 		
+			
+			;void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior)
+	InsertaEnMedio:
+				; nuevo->siguiente = posterior;
+				; nuevo->anterior = antecesor;
+				; antecesor->siguiente = nuevo;
+				; posterior->anterior = nuevo;
+		push rbp
+		mov rbp, rsp
+		; rdi := antecesor
+		; rsi := nuevo
+		; rdx:= posterior 
+		mov qword[rsi + OFFSET_SIGUIENTE], rdx ; nuevo->siguiente = posterior;
+		mov qword[rsi + OFFSET_ANTERIOR], rdi ; nuevo->anterior = antecesor;
+		mov qword[rdi + OFFSET_SIGUIENTE], rsi ; antecesor->siguiente = nuevo;
+		mov qword[rdx + OFFSET_ANTERIOR], rsi ; posterior->anterior = nuevo;
+		pop rbp
+		ret	
+					
+		; void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp )
 	filtrarAltaLista:
 		; COMPLETAR AQUI EL CODIGO
 

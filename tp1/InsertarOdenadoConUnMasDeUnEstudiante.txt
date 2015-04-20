@@ -1,0 +1,30 @@
+eduardo
+	chinchulin
+	46
+juan
+	salchicha
+	45
+juanita
+	bife
+	78
+leila
+	entrania
+	27
+marcela
+	rueda
+	45
+mariana
+	vacio
+	1
+mariana
+	vacio
+	8
+mario
+	asado
+	23
+miguel
+	entrania
+	2
+tomas
+	molleja
+	14

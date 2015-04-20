@@ -451,5 +451,31 @@ void tests_funcion_edadMedia(){
 }
 
 void tests_funcion_insertarOrdenado(){
+	//bool res = true;
+	altaLista *miAltaLista = altaListaCrear();
+	//altaLista *miAltaListaVacia = altaListaCrear();
+	altaLista *miAltaListaConUnElemento = altaListaCrear();
+	// iserto de manera ordenada los estudiantes
+	
+	insertarOrdenado( miAltaListaConUnElemento, estudianteCrear( "eduardo", "chinchulin", 5 ), (tipoFuncionCompararDato)menorEstudiante );
+	
+	altaListaImprimir(miAltaListaConUnElemento, "InsertarOdenadoConUnSoloEstudiante.txt", (tipoFuncionImprimirDato)estudianteImprimir );
+	insertarOrdenado( miAltaLista, estudianteCrear( "miguel", "entrania", 2 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "leila", "entrania", 27  ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "mario", "asado", 23 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "juanita", "bife", 78 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "marcela", "rueda", 45 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "juan", "salchicha", 45 ), (tipoFuncionCompararDato)menorEstudiante );	
+	insertarOrdenado( miAltaLista, estudianteCrear( "tomas", "molleja", 14 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "eduardo", "chinchulin", 46), (tipoFuncionCompararDato)menorEstudiante);
+	insertarOrdenado( miAltaLista, estudianteCrear( "mariana", "vacio", 1 ), (tipoFuncionCompararDato)menorEstudiante );
+	insertarOrdenado( miAltaLista, estudianteCrear( "mariana", "vacio", 8 ), (tipoFuncionCompararDato)menorEstudiante );
 
+	altaListaImprimir(miAltaLista, "InsertarOdenadoConUnMasDeUnEstudiante.txt", (tipoFuncionImprimirDato)estudianteImprimir );
+
+
+	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	//altaListaBorrar( miAltaListaVacia, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	altaListaBorrar( miAltaListaConUnElemento, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
+	printf("tests_funcion_isertarOrdenado ----> %s \n", "ok");
 }

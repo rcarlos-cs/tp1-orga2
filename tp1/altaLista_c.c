@@ -228,14 +228,98 @@ float edadMedia( altaLista *l ){
 /*
 void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f ){
 	nodo* actual = l->primero; 	
-	nodo* anterior = NULL;
-	if(actual != NULL){
-		while( !f(dato, actual->dato) && actual->siguiente != NULL ){
-			actual = actual->siguiente;
-			
-		}
+	nodo* antecesor = NULL;
+	nodo* nuevoNodo = nodoCrear(dato);
+	
+	if (actual == NULL){
+		// Caso en que la lista esta vacia, agrego como primero y ultimo
+		l->primero = nuevoNodo;
+		l->ultimo = nuevoNodo;
+	}else if (f(dato,actual->dato)){
+		// Caso en que actual es el primer nodo
+		nuevoNodo->siguiente = actual;
+		actual->anterior = nuevoNodo;
+		l->primero = nuevoNodo;
 	}else{
-		
-	} 
+		//caso en el que agrego el nuevo nodo en el medio de la lista
+		// busco donde debo poner el nodo;
+		while (actual != NULL && !f(dato, actual->dato)){
+			antecesor = actual;
+			actual = actual->siguiente;
+		}
+		if ( actual == NULL){
+		// caso agrego a lo ultimo de la lista
+			//actual = l->ultimo;
+			antecesor->siguiente = nuevoNodo ;
+			nuevoNodo->anterior = antecesor;
+			l->ultimo = nuevoNodo ;
+		}else{
+			// caso  agrego en medio, osea que dato > actual->dato
+			nuevoNodo->siguiente = actual;
+			nuevoNodo->anterior = antecesor;
+			antecesor->siguiente = nuevoNodo;
+			actual->anterior = nuevoNodo;
+		}	
+	}	
 }
+*/
+
+/*
+void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f ){
+	nodo* actual = l->primero; 	
+	nodo* antecesor = NULL;
+	nodo* nuevoNodo = nodoCrear(dato);
+	
+	if (actual == NULL){
+		// Caso en que la lista esta vacia, agrego como primero y ultimo
+		listaVaciaInsertarNodo(l, nuevoNodo);
+	}else if (f(dato,actual->dato)){
+		// Caso en que actual es el primer nodo
+		listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
+	}else{
+		//caso en el que agrego el nuevo nodo en el medio de la lista o en el ultimo nodo
+		// busco donde debo poner el nodo;
+		while (actual != NULL && !f(dato, actual->dato)){
+			antecesor = actual;
+			actual = actual->siguiente;
+		}
+		if ( actual == NULL){
+		// caso agrego a lo ultimo de la lista
+			//actual = l->ultimo;
+			listaNoVaciaInsertaComoultimo( l, antecesor, nuevoNodo);
+		}else{
+			// caso  agrego en medio, osea que dato > actual->dato
+			InsertaEnMedio(antecesor, nuevoNodo, actual);
+		}	
+	}	
+}
+
+// *****  AUXILIARES DE insertarOdenado ***** /
+
+void listaVaciaInsertarNodo(altaLista* l, nodo* nuevo){
+	// pre: la lista debe estar vacia
+	l->primero = nuevo;
+	l->ultimo = nuevo;
+	// post: devuelve la lista con un solo elemento
+}
+void listaNoVaciaInsertaComoPrimero(altaLista* l, nodo* prim, nodo* nuevo){
+	// pre: la lista no esta vacia, nuevo se inserta como primer nodo de la lista , donde prim = l->primero
+	nuevo->siguiente = prim;
+	prim->anterior = nuevo;
+	l->primero = nuevo;
+	// post: la lista tiene como primer nodo a nuevo
+} 
+void listaNoVaciaInsertaComoultimo(altaLista* l, nodo* ult, nodo* nuevo){
+	// pre: la lista no esta vacia, nuevo se inserta como ultmimo nodo de la lista , donde ult = l->ultimo
+	ult->siguiente = nuevo;
+	nuevo->anterior = ult;
+	l->ultimo = nuevo;
+}
+void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior){
+	nuevo->siguiente = posterior;
+	nuevo->anterior = antecesor;
+	antecesor->siguiente = nuevo;
+	posterior->anterior = nuevo;
+}
+
 */
