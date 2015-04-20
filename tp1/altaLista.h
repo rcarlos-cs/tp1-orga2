@@ -47,17 +47,20 @@
 	altaLista *altaListaCrear( void );
 	void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f );
 	void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f );
-	
+
+/** Funciones Avanzadas **/
+
+	float edadMedia( altaLista *l );
+	void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f );
+		
 			/*****  AUXILIARES DE insertarOdenado *****/
 
 			void listaVaciaInsertarNodo(altaLista* l, nodo* nuevo);
 			void listaNoVaciaInsertaComoPrimero(altaLista* l, nodo* prim, nodo* nuevo);
 			void listaNoVaciaInsertaComoultimo(altaLista* l, nodo* ult, nodo* nuevo);
 			void InsertaEnMedio(nodo* anterior, nodo* nuevo, nodo* posterior);
-/** Funciones Avanzadas **/
-
-	float edadMedia( altaLista *l );
-	void insertarOrdenado( altaLista *l, void *dato, tipoFuncionCompararDato f );
+			/*****  FIN AUXILIARES DE insertarOdenado *****/
+			
 	void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp );
 
 

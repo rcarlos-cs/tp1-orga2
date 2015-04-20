@@ -323,3 +323,40 @@ void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior){
 }
 
 */
+
+void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp ){
+	nodo* actual = l->primero; 	
+	nodo* antecesor = NULL;
+	if ( actual != actual) { // si la lista no es vacia, borrar todos los elementos que no cumplan con f
+		
+		while( actual != NULL && f(actual->dato, datoCmp) ){ // avanzar en la lista
+			antecesor = actual ;
+			actual = actual->siguiente ;
+		}
+	
+	}
+	// si la lista es vacia, no modifico la lista
+
+/*	
+	if (actual == NULL){
+		// si la lista es vacia, no hacemos nunguna comparacion y no se modifica la lista
+	}else if (f(datoCmp,actual->dato)){
+		// Caso en que actual es el primer nodo
+		listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
+	}else{
+		//caso en el que agrego el nuevo nodo en el medio de la lista o en el ultimo nodo
+		// busco donde debo poner el nodo;
+		while (actual != NULL && !f(dato, actual->dato)){
+			antecesor = actual;
+			actual = actual->siguiente;
+		}
+		if ( actual == NULL){
+		// caso agrego a lo ultimo de la lista
+			//actual = l->ultimo;
+			listaNoVaciaInsertaComoultimo( l, antecesor, nuevoNodo);
+		}else{
+			// caso  agrego en medio, osea que dato > actual->dato
+			InsertaEnMedio(antecesor, nuevoNodo, actual);
+		}	
+	}	*/
+}

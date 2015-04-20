@@ -397,8 +397,8 @@ section .text
 		mov rbx, rdi		; Me guardo la direccion  que apunta al dato
 		mov rdi, NODO_SIZE ; Paso en tamanio del nodo, para utilizarla en la funcion malloc
 		call malloc
-		mov qword[rax + OFFSET_SIGUIENTE], 0	 ; cargo el puntero a siguiente en NULL
-		mov	qword[rax + OFFSET_ANTERIOR], 0		; cargo el puntero a anterioR en NULL
+		mov qword[rax + OFFSET_SIGUIENTE], NULL	 ; cargo el puntero a siguiente en NULL
+		mov	qword[rax + OFFSET_ANTERIOR], NULL		; cargo el puntero a anterioR en NULL
 		mov qword[rax + OFFSET_DATO],rbx 			; Cargo la direccion del dato
 		
 		pop r12
@@ -693,30 +693,32 @@ section .text
 		
 		mov rbx, rdi ;backup de rbx := l
 		mov r12, rsi ; backup de r12 := dato
-		mov FUNCION_COMPARAR, rdx ; backup de r13 := f
-		mov r14, qword[rbx + OFFSET_PRIMERO]; R14 := actual
+		mov FUNCION_COMPARAR, rdx ; backup de r13 := f	
 		mov rdi, r12; rdi := dato
 		call nodoCrear ; nodo *nodoCrear( void *dato );
 		; rax := nuevoNodo
 		mov r13, rax ; backup r13 := nuevoNodo  
+		mov r14, qword[rbx + OFFSET_PRIMERO]; R14 := actual
 		cmp r14, NULL ; Si la lista es vacia actual != NULL
-		je .inserterUnicoNodo 
+		je .insertarUnicoNodo 
 		mov rdi, r12 ; rdi := dato
 		mov rsi, qword[r14 + OFFSET_DATO] ; rsi:= actual->dato 
 		call FUNCION_COMPARAR ; bool menorEstudiante(estudiante *e1, estudiante *e2)
-		cmp rax, 1; menorEstudiante(dato, actual->dato) == true
+		cmp rax, TRUE ; menorEstudiante(dato, actual->dato) == true
 		je .insertarComoPrimero
 	.while:
-		cmp r14, NULL ; 
-		jne .insertEnElMedio
+		cmp r14, NULL ; actual - NULL
+		;jne .insertEnElMedio
+		je .insertComoUltimo
 		mov rdi, r12 ; rdi := dato
 		mov rsi, qword[r14 + OFFSET_DATO] ;
-		call  r13  ; !f(dato, actual->dato))
-		cmp rax, 1 ;
-		je .insertComoUltimo
+		call FUNCION_COMPARAR  ; !f(dato, actual->dato))
+		cmp rax, TRUE ;
+		;je .insertComoUltimo
+		je .insertEnElMedio
 		; Iterar en el while
 		mov r15, r14 ; r15 := actual , donde r15 es : antecesor := actual
-		mov r14, qword[r14 + OFFSET_SIGUIENTE]; actual = actual->siguiente;
+		mov r14, qword[r15 + OFFSET_SIGUIENTE]; actual = actual->siguiente;
 		JMP .while
 		
 	.insertComoUltimo:
@@ -737,9 +739,9 @@ section .text
 		mov rdx, r13
 		call  listaNoVaciaInsertaComoPrimero; void listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
 		jmp .fin
-	.inserterUnicoNodo:
+	.insertarUnicoNodo:
 		mov rdi, rbx ; rdi := l
-		mov rsi, r12 ; rsi := nuevoNodo
+		mov rsi, r13 ; rsi := nuevoNodo
 		call listaVaciaInsertarNodo ; void listaVaciaInsertarNodo(altaLista* l, nodo* nuevo) 
 		jmp .fin
 		.fin:
@@ -816,7 +818,12 @@ section .text
 		mov qword[rdx + OFFSET_ANTERIOR], rsi ; posterior->anterior = nuevo;
 		pop rbp
 		ret	
-					
+		
+			
+			
+			; /****** FIN AUXILIARES DE insertarOdenado ******/		
+		
+		
 		; void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp )
 	filtrarAltaLista:
 		; COMPLETAR AQUI EL CODIGO

@@ -32,6 +32,7 @@ void tests_funcion_altaListaCrearYBorrar();
 void tests_crear_una_lista_y_agregarle_un_elemento();
 void tests_funcion_edadMedia();
 void tests_funcion_insertarOrdenado();
+void tests_funcion_filtrarAltaLista();
 // FUNCIONES EXTERNA QUE IMPLEMENTAMOS EN ASM
 
 //extern unsigned char string_longitud( char *s );
@@ -67,6 +68,7 @@ int main (void){
 	tests_crear_una_lista_y_agregarle_un_elemento();
 	tests_funcion_edadMedia();
 	tests_funcion_insertarOrdenado();
+	tests_funcion_filtrarAltaLista();
 	return 0;
 }
 
@@ -458,8 +460,9 @@ void tests_funcion_insertarOrdenado(){
 	// iserto de manera ordenada los estudiantes
 	
 	insertarOrdenado( miAltaListaConUnElemento, estudianteCrear( "eduardo", "chinchulin", 5 ), (tipoFuncionCompararDato)menorEstudiante );
-	
+
 	altaListaImprimir(miAltaListaConUnElemento, "InsertarOdenadoConUnSoloEstudiante.txt", (tipoFuncionImprimirDato)estudianteImprimir );
+
 	insertarOrdenado( miAltaLista, estudianteCrear( "miguel", "entrania", 2 ), (tipoFuncionCompararDato)menorEstudiante );
 	insertarOrdenado( miAltaLista, estudianteCrear( "leila", "entrania", 27  ), (tipoFuncionCompararDato)menorEstudiante );
 	insertarOrdenado( miAltaLista, estudianteCrear( "mario", "asado", 23 ), (tipoFuncionCompararDato)menorEstudiante );
@@ -478,4 +481,15 @@ void tests_funcion_insertarOrdenado(){
 	//altaListaBorrar( miAltaListaVacia, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 	altaListaBorrar( miAltaListaConUnElemento, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 	printf("tests_funcion_isertarOrdenado ----> %s \n", "ok");
+}
+
+void tests_funcion_filtrarAltaLista(){
+	altaLista *miAltaLista = altaListaCrear();
+	estudiante *Leila = estudianteCrear( "leila", "entrania", 21 ) );
+	estudiante *Laura = estudianteCrear( "laura", "provoletta", 23 );
+	insertarOrdenado( miAltaLista, Leila, (tipoFuncionCompararDato)menorEstudiante );
+	filtrarAltaLista( miAltaLista, (tipoFuncionCompararDato)menorEstudiante, Laura );
+	
+	altaListaBorrar(miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar );
+	printf("tests_funcion_filtraAltaLista ----> %s \n", "ok");
 }
