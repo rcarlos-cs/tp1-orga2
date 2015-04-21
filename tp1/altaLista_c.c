@@ -326,15 +326,45 @@ void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior){
 
 void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp ){
 	nodo* actual = l->primero; 	
-	nodo* antecesor = NULL;
-	if ( actual != actual) { // si la lista no es vacia, borrar todos los elementos que no cumplan con f
+	nodo *borrar = NULL;
+	if ( actual != NULL ) { // si la lista no es vacia, borrar todos los elementos que no cumplan con f
 		
-		while( actual != NULL && f(actual->dato, datoCmp) ){ // avanzar en la lista
-			antecesor = actual ;
-			actual = actual->siguiente ;
+		while( actual != NULL ){ // avanzar en la lista y filtrar a los nodos con la funcion f
+			
+			if ( ! f( actual, datoCmp) ){ // no pasa que   actual < datoCmp
+				borrar = actual;
+				actual = actual->siguiente; 
+				deletearNodoDeLista(l,borrar); // donde borrar borra el nodo borrar y hace las uniones que hagan falta para restablecer el invariante de lista
+			}else{
+				actual = actual->siguiente;
+			}	
 		}
 	
 	}
+}
+		/****** AUXILIARES DE LA FUNCION filtrar alta lista *****/
+void deletearNodoDeLista(altaLista *l, nodo* borrar){
+	if (borrar->anterior == NULL && borrar->siguiente){ // caso en el que tengo que borrar el unico nodo de la lista
+		l->primero = NULL;
+		l->ultimo = NULL;
+	}else if ( borrar->anterior == NULL) { // Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el primero
+		l->primero = borrar->siguiente;
+	}else if (borrar->siguiente == NULL){ // Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el ultimo
+		l->ultimo = borrar->anterior;
+	}else { // caso en el que la lista tiene mas de 3 elementos y elemento a borrar se encuentre en medio de la lista
+		aislarNodoDelMedioDeLaLista(borrar);
+	}
+	nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
+}
+void aislarNodoDelMedioDeLaLista(nodo *aislar){
+	// Pre: Lista como minimo de 3 elementos
+	nodo *antecesor =  aislar->anterior;
+	nodo *sucesor = aislar->siguiente;
+	antecesor->siguiente = sucesor;
+	sucesor->anterior = antecesor;
+	// Post: Lista esta igual solo que le sacamos el nodo aislar que se encontraba en algun lado de medio de la lista
+}
+
 	// si la lista es vacia, no modifico la lista
 
 /*	
@@ -358,5 +388,6 @@ void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp ){
 			// caso  agrego en medio, osea que dato > actual->dato
 			InsertaEnMedio(antecesor, nuevoNodo, actual);
 		}	
-	}	*/
+	}	
 }
+*/

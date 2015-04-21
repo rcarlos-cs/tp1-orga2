@@ -63,6 +63,11 @@
 			
 	void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp );
 
+			/*****  AUXILIARES DE filtrarAltaLista *****/
+			
+			void deletearNodoDeLista(altaLista *l, nodo* borrar);
+			void aislarNodoDelMedioDeLaLista(nodo *ailar);
+			/*****  FIN AUXILIARES DE filtrarAltaLista*****/
 
 /** Funciones Auxiliares Sugeridas **/
 

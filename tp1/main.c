@@ -485,7 +485,7 @@ void tests_funcion_insertarOrdenado(){
 
 void tests_funcion_filtrarAltaLista(){
 	altaLista *miAltaLista = altaListaCrear();
-	estudiante *Leila = estudianteCrear( "leila", "entrania", 21 ) );
+	estudiante *Leila = estudianteCrear( "leila", "entrania", 21 );
 	estudiante *Laura = estudianteCrear( "laura", "provoletta", 23 );
 	insertarOrdenado( miAltaLista, Leila, (tipoFuncionCompararDato)menorEstudiante );
 	filtrarAltaLista( miAltaLista, (tipoFuncionCompararDato)menorEstudiante, Laura );
