@@ -1,0 +1,9 @@
+eduardo
+	chinchulin
+	46
+juan
+	salchicha
+	45
+juanita
+	bife
+	78

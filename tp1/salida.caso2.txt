@@ -1,3 +1,2 @@
-<vacia>
->>>>>>>>>>>>>>>> PROBANDO EDAD-MEDIA
-edadMedia: 0.00000
+aBEL | vACIO | 22
+aGUSTINA | pROVOLETTA | 22
