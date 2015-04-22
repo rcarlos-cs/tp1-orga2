@@ -326,47 +326,38 @@ void InsertaEnMedio(nodo* antecesor, nodo* nuevo, nodo* posterior){
 
 */
 
+/*
+
 void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp ){
 	nodo* actual = l->primero; 	
 	nodo *borrar = NULL;
-	if ( actual != NULL ) { // si la lista no es vacia, borrar todos los elementos que no cumplan con f
-		
-		while( actual != NULL ){ // avanzar en la lista y filtrar a los nodos con la funcion f
-			
-			if ( !f( actual->dato, datoCmp) ){ // no pasa que   actual < datoCmp
-				borrar = actual;
-				actual = actual->siguiente; 
-				deletearNodoDeLista(l,borrar); // donde borrar borra el nodo borrar y hace las uniones que hagan falta para restablecer el invariante de lista
-			}else{
-				actual = actual->siguiente;
-			}	
-		}
-	
-	}
+	while( actual != NULL ){ // avanzar en la lista y filtrar a los nodos con la funcion f
+		borrar = actual;
+		actual = actual->siguiente; 
+		if ( !f( borrar->dato, datoCmp) ){ // no pasa que   actual < datoCmp
+			deletearNodoDeLista(l,borrar); // donde borrar borra el nodo borrar y hace las uniones que hagan falta para restablecer el invariante de lista
+		}	
+	}	
 }
-		/****** AUXILIARES DE LA FUNCION filtrar alta lista *****/
+	
+	
+		// / **** AUXILIARES DE LA FUNCION filtrar alta lista **** * /
+
 void deletearNodoDeLista(altaLista *l, nodo* borrar){
-	//nodo *borrar =borrarNodo;
-	//borrarNodo = NULL;
 	if (borrar->anterior == NULL && borrar->siguiente == NULL){ // caso en el que tengo que borrar el unico nodo de la lista
 		l->primero = NULL;
 		l->ultimo = NULL;
-		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar);
 	}else if ( borrar->anterior != NULL && borrar->siguiente  != NULL) {
 		
 			// caso en el que la lista tiene mas de 3 elementos y elemento a borrar se encuentre en medio de la lista
 			aislarNodoDelMedioDeLaLista(borrar);
-			//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
-
 	}else if (borrar->siguiente == NULL){ // Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el ultimo
 		l->ultimo = borrar->anterior;
 		borrar->anterior->siguiente = NULL;
-		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
-	}else if (borrar->anterior == NULL ){ 
+	}else { 
 		// Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el primero
 		l->primero = borrar->siguiente;
 		borrar->siguiente->anterior = NULL;
-		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
 	}
 	 nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar);
 }
@@ -377,31 +368,5 @@ void aislarNodoDelMedioDeLaLista(nodo *aislar){
 	antecesor->siguiente = sucesor;
 	sucesor->anterior = antecesor;
 	// Post: Lista esta igual solo que le sacamos el nodo aislar que se encontraba en algun lado de medio de la lista
-}
-
-	// si la lista es vacia, no modifico la lista
-
-/*	
-	if (actual == NULL){
-		// si la lista es vacia, no hacemos nunguna comparacion y no se modifica la lista
-	}else if (f(datoCmp,actual->dato)){
-		// Caso en que actual es el primer nodo
-		listaNoVaciaInsertaComoPrimero(l, actual, nuevoNodo);
-	}else{
-		//caso en el que agrego el nuevo nodo en el medio de la lista o en el ultimo nodo
-		// busco donde debo poner el nodo;
-		while (actual != NULL && !f(dato, actual->dato)){
-			antecesor = actual;
-			actual = actual->siguiente;
-		}
-		if ( actual == NULL){
-		// caso agrego a lo ultimo de la lista
-			//actual = l->ultimo;
-			listaNoVaciaInsertaComoultimo( l, antecesor, nuevoNodo);
-		}else{
-			// caso  agrego en medio, osea que dato > actual->dato
-			InsertaEnMedio(antecesor, nuevoNodo, actual);
-		}	
-	}	
 }
 */

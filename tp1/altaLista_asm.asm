@@ -16,7 +16,7 @@
 ; AVANZADAS
 	global edadMedia
 	global insertarOrdenado
-	;global filtrarAltaLista
+	global filtrarAltaLista
 	
 ; FUNCIONES AUXILIARES	
 	global string_longitud
@@ -65,8 +65,8 @@ section .rodata
 	finlinea_char: db'%s', LF, FINSTRING ; "%s\n"
 	tabulacion_finlinea_char : db HT,'%s',LF,FINSTRING ; "\t%c\n"
 	tabulacion_finlinea_int : db HT,'%d',LF,FINSTRING; "\t%d\n"
-	mensaje_vacio: db '<vacio>',LF, FINSTRING ; "<vacio>\n" 
-	write: db 'w+',FINSTRING 
+	mensaje_vacio: db '<vacia>',LF, FINSTRING ; "<vacio>\n" 
+	write: db 'a',FINSTRING 
 section .data
 
 ;Para declarar variables globales no inicializadas,Usamos la pseudo-instrucciones RESB, RESW, RESD, RESQ 
@@ -830,3 +830,113 @@ section .text
 	filtrarAltaLista:
 		; COMPLETAR AQUI EL CODIGO
 
+		; rdi := l 
+		; rsi := f 
+		; rdx := datoCmp
+		push rbp 
+		mov rbp, rsp
+		push rbx
+		push r12
+		push r13
+		push r14
+		push r15
+		sub rsp, 8 ; alineo la pila a 16
+		
+		mov rbx, rdi ; backup  rbx := l
+		mov r12, rsi ; backup  r12 := f
+		mov r13, rdx ; backup  r13 := datoCmp
+		mov r14, qword[rbx + OFFSET_PRIMERO] ; R14 := actual
+	.while:
+		cmp r14, NULL ;
+		je .fin ; si actual == NULL salto a .fin
+		mov r15, r14 ; borrar :=  actual
+		mov r14, [r14 + OFFSET_SIGUIENTE]  ; actual ;= actual->siguiente
+		mov rdi,  [r15 + OFFSET_DATO] ; 
+		mov rsi, r13 ; 
+		call r12 ; f(borrar->dato, datoCmp) 
+		cmp  rax, FALSE;
+		je  .deletNodoDeLista;
+		jmp .while
+	.deletNodoDeLista:
+		mov rdi, rbx; 
+		mov rsi, r15
+		call deletearNodoDeLista ; llamo a la funcion auxiliar deletearNodoDeLista(l, borrar)
+		jmp .while
+	.fin:
+		add rsp, 8 ; deslineo la pila
+		pop r15
+		pop r14
+		pop r13
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+	
+	;/***** FUNCION AUXILIAR filtrarAltaLista ******/
+	
+	;void deletearNodoDeLista(altaLista *l, nodo* borrar)
+	deletearNodoDeLista:
+
+		; rsi := l
+		; rdi := borrar
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		push r13
+		push r14
+		
+		mov rbx, rdi ; rbx := l
+		mov r12, rsi ; r12 := borrar
+		cmp qword[r12 + OFFSET_ANTERIOR], NULL;
+		je .esUnicoNodoDeLista ; saltar para Ver si es unico nodo de la lista
+	.volver:
+		cmp qword[r12 + OFFSET_ANTERIOR] , NULL ;
+		je .borrarPrimero ; Es el primer elemento de la lista
+		cmp qword[r12 + OFFSET_SIGUIENTE], NULL ; es el ultimo elemento de la lista
+		je .borrarUltimo
+		mov rdi, r12
+		call aislarNodoDelMedioDeLaLista; aislarNodoDelMedioDeLaLista(borrar)
+		jmp .borrarNodo
+	.borrarUltimo:
+		mov r13, [r12 + OFFSET_ANTERIOR]
+		mov qword[rbx + OFFSET_ULTIMO], R13 ; l->ultimo ;= borrar->anterior
+		mov qword[r13 + OFFSET_SIGUIENTE], NULL ; borrar->anterior->siguiente = NULL
+		jmp .borrarNodo 
+	.borrarPrimero:
+		mov r13,  qword[r12 + OFFSET_SIGUIENTE] 
+		mov qword[rbx + OFFSET_PRIMERO], R13 ; l->primero := borrar->siguiente
+		mov qword[r13 + OFFSET_ANTERIOR], NULL;  borrar->siguiente->anterior := NULL
+		jmp .borrarNodo 
+		
+	.esUnicoNodoDeLista:
+		cmp qword[r12 + OFFSET_SIGUIENTE], NULL ; 
+		jne .volver ;
+		mov qword[rbx + OFFSET_PRIMERO], NULL ; l->primero = NULL 
+		mov qword[rbx + OFFSET_ULTIMO], NULL ; l->ultimo = NULL
+	.borrarNodo:
+		mov rdi, r12 ; rdi := borrar
+		lea rsi, [estudianteBorrar]; 
+		call nodoBorrar ; nodoBorra(borrar, (tipoFuncionBorrarDato)estudianteBorrar)
+		pop r14
+		pop r13
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+	
+	;prototipo: void aislarNodoDelMedioDeLaLista(nodo *aislar)
+	aislarNodoDelMedioDeLaLista;	
+		; rdi := aislar
+		push rsp
+		mov rbp, rsp
+		push rbx
+		push r12
+		mov rbx, qword[rdi + OFFSET_ANTERIOR] ; nodo *antecesor =  aislar->anterior;
+		mov r12, qword[rdi + OFFSET_SIGUIENTE] ; nodo *sucesor = aislar->siguiente;
+		mov qword[rbx + OFFSET_SIGUIENTE], R12 ; antecesor->siguiente = sucesor;
+		mov qword[r12 + OFFSET_ANTERIOR], RBX ; sucesor->anterior = antecesor;
+		pop r12
+		pop rbx
+		pop rbp
+		ret

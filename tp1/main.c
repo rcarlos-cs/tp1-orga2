@@ -517,27 +517,3 @@ void tests_funcion_filtrarAltaLista(){
 	estudianteBorrar(Laura);
 
 }
-
-	//altaLista *miAltaListaConTresElementos = altaListaCrear();
-	//altaLista *miAltaListaConCuatroElementos = altaListaCrear();
-	//estudiante *Miguel = estudianteCrear( "miguel", "mortadela", 21 );
-	//estudiante *Andres = estudianteCrear( "andres", "provoletta", 25 );
-	//estudiante *Ramon = estudianteCrear( "ramon", "provoletta", 19 );
-	//estudiante *Ale = estudianteCrear( "ale", "provoletta", 19 );
-
-
-	//insertarOrdenado( miAltaListaConDosElementos, Leila, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConDosElementos, Ale, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConDosElementos, Andres, (tipoFuncionCompararDato)menorEstudiante );
-	//filtrarAltaLista( miAltaListaConDosElementos, (tipoFuncionCompararDato)menorEstudiante, Laura );
-	// Lista con tres elementos
-	//insertarOrdenado( miAltaListaConTresElementos, Leila, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConTresElementos, Andres, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConTresElementos, Ramon, (tipoFuncionCompararDato)menorEstudiante );
-	//filtrarAltaLista( miAltaListaConTresElementos, (tipoFuncionCompararDato)menorEstudiante, Laura );
-	// Lista con cuatro elementos
-	//insertarOrdenado( miAltaListaConCuatroElementos, Leila, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConCuatroElementos, Ramon, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConCuatroElementos, Miguel, (tipoFuncionCompararDato)menorEstudiante );
-	//insertarOrdenado( miAltaListaConCuatroElementos, Andres, (tipoFuncionCompararDato)menorEstudiante );
-	//filtrarAltaLista( miAltaListaConCuatroElementos, (tipoFuncionCompararDato)menorEstudiante, Laura );
