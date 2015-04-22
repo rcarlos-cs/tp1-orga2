@@ -11,7 +11,7 @@
 	global nodoBorrar
 	global altaListaCrear
 	global altaListaBorrar
-	;global altaListaImprimir
+	global altaListaImprimir
 
 ; AVANZADAS
 	global edadMedia
@@ -65,8 +65,8 @@ section .rodata
 	finlinea_char: db'%s', LF, FINSTRING ; "%s\n"
 	tabulacion_finlinea_char : db HT,'%s',LF,FINSTRING ; "\t%c\n"
 	tabulacion_finlinea_int : db HT,'%d',LF,FINSTRING; "\t%d\n"
-	imprimirVacio: db '<vacio>',LF, FINSTRING ; "<vacio>\n" 
-	write: db 'w',FINSTRING 
+	mensaje_vacio: db '<vacio>',LF, FINSTRING ; "<vacio>\n" 
+	write: db 'w+',FINSTRING 
 section .data
 
 ;Para declarar variables globales no inicializadas,Usamos la pseudo-instrucciones RESB, RESW, RESD, RESQ 
@@ -541,17 +541,17 @@ section .text
 			push r14
 			push r15
 			sub rsp, 8 ; alineo la pila
-			; rdi := l
-			; rsi := archivo 
+			; rdi := lista
+			; rsi := nombre archivo 
 			; rdx := f
 			mov rbx, rdi ; backup altaLista rbx := l
 			mov r12, rsi ; backup archivo r12 := archivo
-			mov r13, rsi ; backup tipoFuncionImprimir r13 := f
+			mov r13, rdx ; backup tipoFuncionImprimir r13 := f
 			mov rdi, r12; rdi := archivo 
-			xor rsi, rsi;
 			mov rsi, write; modo escritura "w"
 			call fopen ; prototipo de fopen: FILE *fopen(const char *filename, const char *mode)
-			mov [rel pFile], rax ; guardo la dirrecion del archivo a escribir, osea r14= pFile 
+			;mov [rel pFile], rax ; guardo la dirrecion del archivo a escribir, osea r14= pFile
+			mov r14, rax
 			mov r15, qword[rbx + OFFSET_PRIMERO] ; r15 = nodoActual
 			cmp r15, NULL
 			je .imprimirVacio
@@ -565,9 +565,11 @@ section .text
 			jmp .ciclo
 		.imprimirVacio:
 			mov rdi, r14
-			mov rsi, imprimirVacio
+			mov rsi, mensaje_vacio
 			call fprintf ; fprintf(pFile, "<vacio>" );
-		.fin:	
+		.fin:
+			mov rdi, r14
+			call fclose
 			add rsp, 8
 			pop r15
 			pop r14

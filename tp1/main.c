@@ -413,8 +413,6 @@ void tests_crear_una_lista_y_agregarle_un_elemento(){
 	altaListaBorrar( miAltaLista, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 	altaListaBorrar( miAltaListaVacia, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
 	altaListaBorrar( miAltaListaConUnElemento, (tipoFuncionBorrarDato)estudianteBorrar ); // aca borro la lista
-	
-	//fclose(pFile);
 }
 void tests_funcion_edadMedia(){
 	bool res = true;
