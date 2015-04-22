@@ -187,7 +187,7 @@ void altaListaBorrar( altaLista *l, tipoFuncionBorrarDato f ){
 	free(l);
 }
 */
-
+/*
 
 void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f ){
 	FILE* pFile;
@@ -204,6 +204,8 @@ void altaListaImprimir( altaLista *l, char *archivo, tipoFuncionImprimirDato f )
 	}
 	fclose(pFile);
 }
+*/
+
 /*
 float edadMedia( altaLista *l ){
 	nodo* actual = l->primero;
@@ -343,30 +345,30 @@ void filtrarAltaLista( altaLista *l, tipoFuncionCompararDato f, void *datoCmp ){
 	}
 }
 		/****** AUXILIARES DE LA FUNCION filtrar alta lista *****/
-void deletearNodoDeLista(altaLista *l, nodo* borrarNodo){
-	nodo *borrar =borrarNodo;
-	borrarNodo = NULL;
+void deletearNodoDeLista(altaLista *l, nodo* borrar){
+	//nodo *borrar =borrarNodo;
+	//borrarNodo = NULL;
 	if (borrar->anterior == NULL && borrar->siguiente == NULL){ // caso en el que tengo que borrar el unico nodo de la lista
 		l->primero = NULL;
 		l->ultimo = NULL;
+		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar);
 	}else if ( borrar->anterior != NULL && borrar->siguiente  != NULL) {
 		
 			// caso en el que la lista tiene mas de 3 elementos y elemento a borrar se encuentre en medio de la lista
 			aislarNodoDelMedioDeLaLista(borrar);
-			nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
+			//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
 
 	}else if (borrar->siguiente == NULL){ // Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el ultimo
 		l->ultimo = borrar->anterior;
 		borrar->anterior->siguiente = NULL;
-	nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
+		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
 	}else if (borrar->anterior == NULL ){ 
 		// Caso en el que la lista tiene mas de un elemento y el elemento a borrar es el primero
 		l->primero = borrar->siguiente;
 		borrar->siguiente->anterior = NULL;
-	nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
-
+		//nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar); 
 	}
-	 
+	 nodoBorrar(borrar,(tipoFuncionBorrarDato)estudianteBorrar);
 }
 void aislarNodoDelMedioDeLaLista(nodo *aislar){
 	// Pre: Lista como minimo de 3 elementos
